@@ -69,11 +69,13 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
+    "@types/node": "^20.11.28",
     "eslint": "^7.0.0",
     "jest": "^26.0.1",
     "madge": "^6.1.0",
     "node-mocks-http": "^1.8.0",
-    "nodemon": "^2.0.0",
-    "prettier": "^2.0.5"
+    "nodemon": "^2.0.22",
+    "prettier": "^2.0.5",
+    "typescript": "^5.4.2"
   }
 }
