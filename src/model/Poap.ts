@@ -1,7 +1,13 @@
-import { Model, InferAttributes, InferCreationAttributes, DataTypes, ForeignKey } from 'sequelize';
-import { database } from '@/database/connection';
+import {
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  DataTypes,
+  ForeignKey,
+} from "sequelize";
+import { database } from "@/database/connection";
 
-class Poap extends Model {}
+export default class Poap extends Model {}
 
 Poap.init(
   {
@@ -9,12 +15,12 @@ Poap.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      primaryKey: true
+      primaryKey: true,
     },
   },
   {
     tableName: "poap",
-    sequelize: database
+    sequelize: database,
     // schema: config.postgresql.schema,
     // indexes: [
     //   {

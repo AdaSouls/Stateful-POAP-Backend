@@ -1,7 +1,13 @@
-import { Model, InferAttributes, InferCreationAttributes, DataTypes, ForeignKey } from 'sequelize';
-import { database } from '@/database/connection';
+import {
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  DataTypes,
+  ForeignKey,
+} from "sequelize";
+import { database } from "@/database/connection";
 
-class Drop extends Model {}
+export default class Drop extends Model {}
 
 Drop.init(
   {
@@ -9,12 +15,12 @@ Drop.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      primaryKey: true
+      primaryKey: true,
     },
   },
   {
     tableName: "drop",
-    sequelize: database
+    sequelize: database,
     // schema: config.postgresql.schema,
     // indexes: [
     //   {
