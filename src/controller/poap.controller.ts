@@ -22,11 +22,6 @@ const getAllPoaps = catchAsync(async (req, res) => {});
 const getAllPoapsByAddress = catchAsync(async (req, res) => {});
 
 /**
- * Get all Poap records by drop.
- */
-const getAllPoapsByDrop = catchAsync(async (req, res) => {});
-
-/**
  * Get all Poap records by event.
  */
 const getAllPoapsByEvent = catchAsync(async (req, res) => {});
@@ -42,4 +37,4 @@ const getPoapsState = catchAsync(async (req, res) => {});
 |--------------------------------------------------------------------------
 */
 
-export { getAllPoaps, getAllPoapsByAddress, getAllPoapsByDrop, getAllPoapsByEvent, getPoapsState };
+export { getAllPoaps, getAllPoapsByAddress, getAllPoapsByEvent, getPoapsState };

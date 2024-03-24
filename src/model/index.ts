@@ -15,6 +15,12 @@
 
 import Poap from "./Poap";
 import Owner from "./Owner";
-import Drop from "./Drop";
+import Event from "./Event";
 
-export {Poap, Owner, Drop}
+Owner.hasMany(Poap)
+Poap.belongsTo(Owner)
+
+Event.hasMany(Poap)
+Poap.belongsTo(Event)
+
+export {Poap, Owner, Event}

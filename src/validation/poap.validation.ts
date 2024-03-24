@@ -7,8 +7,8 @@ export enum EventType {
   Both="Both"
 }
 
-export interface Drop {
-  name: string;
+export interface Event {
+  title: string;
   description: string;
   city: string;
   country: string;
@@ -43,8 +43,8 @@ const validateEventType = (value: any, helpers: any) => {
 }
 
 
-const drop = Joi.object().keys({
-  name: Joi.string().required(),
+const event = Joi.object().keys({
+  title: Joi.string().required(),
   description: Joi.string().required(),
   city: Joi.string().required(),
   country: Joi.string().required(),
