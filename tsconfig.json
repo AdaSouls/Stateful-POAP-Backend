@@ -93,7 +93,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "src/middleware/validate.js"],
   "exclude": [
     "node-modules",
     "jest.config.js",

@@ -17,9 +17,13 @@ Owner.init(
       unique: true,
       primaryKey: true,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
-    tableName: "owner",
+    tableName: "owners",
     sequelize: database,
     // schema: config.postgresql.schema,
     // indexes: [

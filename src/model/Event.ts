@@ -101,9 +101,13 @@ Event.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    poapType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
-    tableName: "event",
+    tableName: "events",
     sequelize: database,
     // schema: config.postgresql.schema,
     // indexes: [

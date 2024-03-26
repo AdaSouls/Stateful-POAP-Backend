@@ -17,9 +17,14 @@ Poap.init(
       unique: true,
       primaryKey: true,
     },
+    instance: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      unique: true,
+    },
   },
   {
-    tableName: "poap",
+    tableName: "poaps",
     sequelize: database,
     // schema: config.postgresql.schema,
     // indexes: [
