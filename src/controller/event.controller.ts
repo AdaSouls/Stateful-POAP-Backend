@@ -17,7 +17,7 @@ import * as eventService from "@/service/events.service";
 const getAllEvents = catchAsync(async (req, res) => {
   try {
     const events = await eventService.getAllEvents();
-    return events;
+    res.send(events)
   } catch (error) {
     console.log("Error: ", error);
   }
@@ -30,7 +30,7 @@ const getAllEventsByOwnersAddress = catchAsync(async (req, res) => {
   const { address } = req.body;
   try {
     const events = await eventService.getEventByAddress(address);
-    return events;
+    res.send(events)
   } catch (error) {
     console.log("Error: ", error);
   }

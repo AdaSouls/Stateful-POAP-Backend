@@ -17,7 +17,7 @@ import * as poapService from "@/service/poaps.service";
 const getAllPoaps = catchAsync(async (req, res) => {
   try {
     const poaps = await poapService.getAllPoaps();
-    return poaps;
+    res.send(poaps);
   } catch (error) {
     console.log("Error: ", error);
   }
@@ -30,7 +30,7 @@ const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
   const { address } = req.body;
   try {
     const poaps = await poapService.getPoapByAddress(address);
-    return poaps;
+    res.send(poaps);
   } catch (error) {
     console.log("Error: ", error);
   }
@@ -43,7 +43,7 @@ const getAllPoapsByEvent = catchAsync(async (req, res) => {
   const { eventId } = req.body;
   try {
     const poaps = await poapService.getAllPoapsByEvent(eventId);
-    return poaps;
+    res.send(poaps);
   } catch (error) {
     console.log("Error: ", error);
   }
