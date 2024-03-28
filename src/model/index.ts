@@ -17,10 +17,10 @@ import Poap from "./Poap";
 import Owner from "./Owner";
 import Event from "./Event";
 
-Owner.hasMany(Poap)
-Poap.belongsTo(Owner)
+Owner.hasMany(Poap, { foreignKey: 'ownerId' })
+Poap.belongsTo(Owner, { foreignKey: 'ownerId' })
 
-Event.hasMany(Poap)
-Poap.belongsTo(Event)
+Event.hasMany(Poap, { foreignKey: 'eventId' })
+Poap.belongsTo(Event, { foreignKey: 'eventId' })
 
 export {Poap, Owner, Event}
