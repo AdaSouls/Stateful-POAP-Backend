@@ -1,11 +1,12 @@
-const Joi = require('joi');
-const httpStatus = require('http-status');
+import Joi from 'joi';
+import httpStatus from "http-status";
+import { ApiError } from "../util/ApiError";
+import { NextFunction, Request, Response } from "express";
 const pick = require('../util/pick');
-const ApiError = require('../util/ApiError');
 
-const validate = (schema, allowUnknown = true) => (req, res, next) => {
-  const validSchema = pick(schema, ['params', 'query', 'body']);
-  const object = pick(req, Object.keys(validSchema));
+const validate = (schema: any, allowUnknown = true) => (req: Request, res: Response, next: NextFunction) => {
+  const validSchema: any = pick(schema, ['params', 'query', 'body']);
+  const object: any = pick(req, Object.keys(validSchema));
 
   const { value, error } = Joi.compile(validSchema)
     .prefs({

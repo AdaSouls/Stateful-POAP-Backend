@@ -3,7 +3,7 @@ const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
 
-let server;
+let server: any;
 
 
 /*
@@ -23,10 +23,11 @@ const exitHandler = () => {
   }
 };
 
-const unexpectedErrorHandler = (error) => {
+const unexpectedErrorHandler = (error: any) => {
   logger.error(error);
   exitHandler();
 };
+
 
 process.on('uncaughtException', unexpectedErrorHandler);
 process.on('unhandledRejection', unexpectedErrorHandler);
@@ -52,9 +53,9 @@ formalDbMigrations().then(() => {
     server = app.listen(config.port, () => {
       logger.info(`Listening to port ${config.port}`);
     });
-  }).catch((e) => {
+  }).catch((error: any) => {
     exitHandler();
   });
-}).catch((e) => {
+}).catch((error: any) => {
   exitHandler();
 });

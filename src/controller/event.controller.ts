@@ -1,7 +1,7 @@
 const config = require("../config/config");
 const { ethers } = require("ethers");
 import * as httpStatus from "http-status";
-import catchAsync from "../util/catchAsyncTS";
+import catchAsync from "../util/catchAsync";
 const { codeService, errorService, assetService } = require("../service");
 import * as eventService from "@/service/events.service";
 

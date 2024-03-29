@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Motorverse Asset API Server",
   "main": "src/index.js",
+  "type": "module",
   "engines": {
     "node": "20.x",
     "npm": "10.x"
@@ -10,10 +11,16 @@
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=local nodemon src/index.js",
-    "dev2": "cross-env nodemon src/index.js",
+    "dev2": "cross-env nodemon src/index.ts",
+    "dev3": "npm run build && npm run serve",
+    "serve": "node -r dotenv/config build/src/index.js",
+    "build": "npm run clean && npm run build-ts",
     "migrator": "node src/database/migrator.js",
     "test": "jest -i --colors --verbose --detectOpenHandles",
     "test:watch": "jest -i --watchAll",
+    "clean": "rimraf ./build",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
     "coverage": "jest -i --coverage",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
     "lint": "eslint .",
@@ -69,7 +76,11 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
+    "@types/compression": "^1.7.5",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
     "@types/node": "^20.11.28",
+    "@types/passport": "^1.0.16",
     "eslint": "^7.0.0",
     "jest": "^26.0.1",
     "madge": "^6.1.0",

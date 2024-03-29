@@ -5,7 +5,7 @@ import {
   DataTypes,
   ForeignKey,
 } from "sequelize";
-import { database } from "@/database/connection";
+import { sequelize } from "@/database/connection";
 
 export default class Poap extends Model {}
 
@@ -25,7 +25,7 @@ Poap.init(
   },
   {
     tableName: "poaps",
-    sequelize: database,
+    sequelize
     // schema: config.postgresql.schema,
     // indexes: [
     //   {

@@ -2,7 +2,7 @@ import {
   Model,
   DataTypes,
 } from "sequelize";
-import { database } from "@/database/connection";
+import { sequelize } from "@/database/connection";
 
 export default class Event extends Model {}
 
@@ -105,7 +105,7 @@ Event.init(
   },
   {
     tableName: "events",
-    sequelize: database,
+    sequelize
     // schema: config.postgresql.schema,
     // indexes: [
     //   {

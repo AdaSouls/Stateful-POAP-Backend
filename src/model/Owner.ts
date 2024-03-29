@@ -5,7 +5,7 @@ import {
   DataTypes,
   ForeignKey,
 } from "sequelize";
-import { database } from "@/database/connection";
+import { sequelize } from "@/database/connection";
 
 export default class Owner extends Model {}
 
@@ -24,7 +24,7 @@ Owner.init(
   },
   {
     tableName: "owners",
-    sequelize: database,
+    sequelize
     // schema: config.postgresql.schema,
     // indexes: [
     //   {

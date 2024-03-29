@@ -1,6 +1,6 @@
 import path from "path";
 import { Sequelize } from "sequelize";
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 const {
   POSTGRESQL_URL,
   POSTGRESQL_USER,
@@ -10,11 +10,11 @@ const {
 
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
-export let database: Sequelize;
+export let sequelize: Sequelize;
 
 if (POSTGRESQL_URL) {
   console.log("POSTGRES connection: ", POSTGRESQL_URL);
-  database = new Sequelize(POSTGRESQL_URL, {
+  sequelize = new Sequelize(POSTGRESQL_URL, {
     // logging: false,
     // native: false,
     dialectOptions: {
@@ -25,7 +25,7 @@ if (POSTGRESQL_URL) {
     },
   });
 } else if (POSTGRESQL_DB_NAME && POSTGRESQL_USER && POSTGRESQL_PASSWORD) {
-  database = new Sequelize(
+  sequelize = new Sequelize(
     POSTGRESQL_DB_NAME,
     POSTGRESQL_USER,
     POSTGRESQL_PASSWORD,

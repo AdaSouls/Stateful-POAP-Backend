@@ -1,8 +1,8 @@
-const { config, logger } = require('../config');
-const { sequelize, Sequelize } = require('./connection');
-const { Umzug, SequelizeStorage } = require('umzug');
+import {config, logger} from '../config';
+import {sequelize} from './connection';
+import { Umzug, SequelizeStorage } from 'umzug'
 
-const umzug = new Umzug({
+export const umzug = new Umzug({
   migrations: { glob: 'src/database/migrations/*.js' },
   context: sequelize.getQueryInterface(),
 
@@ -25,7 +25,7 @@ const umzug = new Umzug({
 /**
  * An async function to instigate formal (well-defined) db migrations.
  */
-async function formalDbMigrations() {
+export async function formalDbMigrations() {
   try {
     logger.info('DB MIGRATIONS');
 
@@ -44,7 +44,11 @@ async function formalDbMigrations() {
 
     logger.info('....MIGRATIONS OVER');
   } catch (e) {
-    logger.error(new Error(e));
+    if (e instanceof Error) {
+      logger.error(new Error(e.message));
+    } else {
+      logger.error(new Error(String(e)));
+    }
     return Promise.reject(e);
   }
 }
@@ -55,7 +59,7 @@ async function formalDbMigrations() {
  * that don't exist at all, but NOT doing any micro-migrations
  * as we will do that formally via umzug).
  */
-async function basicDbSync() {
+export async function basicDbSync() {
   try {
     logger.info(`POSTGRES DB INIT (basic model sync): ${config.db.sync}`);
     if (config.db.sync === 'all') {
@@ -65,7 +69,11 @@ async function basicDbSync() {
     }
     logger.info('...POSTGRES SYNC DONE');
   } catch (e) {
-    logger.error(new Error(e));
+    if (e instanceof Error) {
+      logger.error(new Error(e.message));
+    } else {
+      logger.error(new Error(String(e)));
+    }
     return Promise.reject(e);
   }
 }
@@ -78,8 +86,8 @@ if (require.main === module) {
 }
 
 
-module.exports = {
-  umzug,
-  formalDbMigrations,
-  basicDbSync,
-};
+// module.exports = {
+//   umzug,
+//   formalDbMigrations,
+//   basicDbSync,
+// };
