@@ -84,10 +84,3 @@ export async function basicDbSync() {
 if (require.main === module) {
   umzug.runAsCLI();
 }
-
-
-// module.exports = {
-//   umzug,
-//   formalDbMigrations,
-//   basicDbSync,
-// };

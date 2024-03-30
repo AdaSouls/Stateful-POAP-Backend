@@ -1,8 +1,4 @@
-const config = require("../config/config");
-const { ethers } = require("ethers");
-import * as httpStatus from "http-status";
 import catchAsync from "../util/catchAsync";
-const { codeService, errorService, assetService } = require("../service");
 import * as poapService from "@/service/poaps.service";
 
 /*
@@ -14,7 +10,7 @@ import * as poapService from "@/service/poaps.service";
 /**
  * Get all Poap records.
  */
-const getAllPoaps = catchAsync(async (req, res) => {
+export const getAllPoaps = catchAsync(async (req, res) => {
   try {
     const poaps = await poapService.getAllPoaps();
     res.send(poaps);
@@ -26,7 +22,7 @@ const getAllPoaps = catchAsync(async (req, res) => {
 /**
  * Get all Poap records by owner's address.
  */
-const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
+export const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
   const { address } = req.body;
   try {
     const poaps = await poapService.getPoapByAddress(address);
@@ -39,7 +35,7 @@ const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
 /**
  * Get all Poap records by event.
  */
-const getAllPoapsByEvent = catchAsync(async (req, res) => {
+export const getAllPoapsByEvent = catchAsync(async (req, res) => {
   const { eventId } = req.body;
   try {
     const poaps = await poapService.getAllPoapsByEvent(eventId);
@@ -52,12 +48,10 @@ const getAllPoapsByEvent = catchAsync(async (req, res) => {
 /**
  * Get Poap's state.
  */
-const getPoapsState = catchAsync(async (req, res) => {});
+export const getPoapsState = catchAsync(async (req, res) => {});
 
 /*
 |--------------------------------------------------------------------------
 | Exports.
 |--------------------------------------------------------------------------
 */
-
-export { getAllPoaps, getAllPoapsByOwnersAddress, getAllPoapsByEvent, getPoapsState };

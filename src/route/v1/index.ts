@@ -1,9 +1,7 @@
-const express = require("express");
-// const assetRoute = require("./asset.route");
-// const walletRoute = require("./wallet.route");
-// const healthCheckRoute = require("./healthCheck.route");
+import express from "express";
 import poapRouter from "./poap.route";
-const config = require("../../config/config");
+import { config } from "../../config";
+
 const router = express.Router();
 
 const defaultRoutes = [
@@ -11,18 +9,6 @@ const defaultRoutes = [
     path: "/poap",
     route: poapRouter,
   },
-  // {
-  //   path: "/healthCheck",
-  //   route: healthCheckRoute,
-  // },
-  // {
-  //   path: "/asset",
-  //   route: assetRoute,
-  // },
-  // {
-  //   path: "/wallet",
-  //   route: walletRoute,
-  // },
 ];
 
 const devRoutes: any[] = [

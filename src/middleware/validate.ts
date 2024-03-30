@@ -2,9 +2,9 @@ import Joi from 'joi';
 import httpStatus from "http-status";
 import { ApiError } from "../util/ApiError";
 import { NextFunction, Request, Response } from "express";
-const pick = require('../util/pick');
+import { pick } from '../util/pick';
 
-const validate = (schema: any, allowUnknown = true) => (req: Request, res: Response, next: NextFunction) => {
+export const validate = (schema: any, allowUnknown = true) => (req: Request, res: Response, next: NextFunction) => {
   const validSchema: any = pick(schema, ['params', 'query', 'body']);
   const object: any = pick(req, Object.keys(validSchema));
 
@@ -26,5 +26,3 @@ const validate = (schema: any, allowUnknown = true) => (req: Request, res: Respo
   Object.assign(req, value);
   return next();
 };
-
-module.exports = validate;

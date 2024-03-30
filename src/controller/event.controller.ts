@@ -1,8 +1,4 @@
-const config = require("../config/config");
-const { ethers } = require("ethers");
-import * as httpStatus from "http-status";
 import catchAsync from "../util/catchAsync";
-const { codeService, errorService, assetService } = require("../service");
 import * as eventService from "@/service/events.service";
 
 /*
@@ -14,7 +10,7 @@ import * as eventService from "@/service/events.service";
 /**
  * Get all Event records.
  */
-const getAllEvents = catchAsync(async (req, res) => {
+export const getAllEvents = catchAsync(async (req, res) => {
   try {
     const events = await eventService.getAllEvents();
     res.send(events)
@@ -26,7 +22,7 @@ const getAllEvents = catchAsync(async (req, res) => {
 /**
  * Get all Event records by owner's address.
  */
-const getAllEventsByOwnersAddress = catchAsync(async (req, res) => {
+export const getAllEventsByOwnersAddress = catchAsync(async (req, res) => {
   const { address } = req.body;
   try {
     const events = await eventService.getEventByAddress(address);
@@ -36,10 +32,3 @@ const getAllEventsByOwnersAddress = catchAsync(async (req, res) => {
   }
 });
 
-/*
-|--------------------------------------------------------------------------
-| Exports.
-|--------------------------------------------------------------------------
-*/
-
-export { getAllEvents, getAllEventsByOwnersAddress };

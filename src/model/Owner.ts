@@ -1,9 +1,6 @@
 import {
   Model,
-  InferAttributes,
-  InferCreationAttributes,
-  DataTypes,
-  ForeignKey,
+  DataTypes
 } from "sequelize";
 import { sequelize } from "@/database/connection";
 

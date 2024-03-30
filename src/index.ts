@@ -1,7 +1,7 @@
-const { formalDbMigrations, basicDbSync } = require('./database/migrator');
-const app = require('./app');
-const config = require('./config/config');
-const logger = require('./config/logger');
+import { formalDbMigrations, basicDbSync } from './database/migrator';
+import app from './app';
+import { config } from './config/config';
+import { logger } from './config/logger';
 
 let server: any;
 
