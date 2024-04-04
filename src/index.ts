@@ -2,6 +2,7 @@ import { formalDbMigrations, basicDbSync } from './database/migrator';
 import app from './app';
 import { config } from './config/config';
 import { logger } from './config/logger';
+import { sequelize } from './database/connection';
 
 let server: any;
 
@@ -59,3 +60,14 @@ formalDbMigrations().then(() => {
 }).catch((error: any) => {
   exitHandler();
 });
+
+// (async () => {
+//   try {
+//     await sequelize.sync({ force: false });
+//     app.listen(config.port, () => {
+//       console.log(`Listening on Port: ${config.port}`);
+//     });
+//   } catch (error: any) {
+//     console.error("Unable to connect:", error.message);
+//   }
+// })();

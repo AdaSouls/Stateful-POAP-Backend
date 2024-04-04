@@ -2,7 +2,7 @@ import {
   Model,
   DataTypes,
 } from "sequelize";
-import { sequelize } from "@/database/connection";
+import { sequelize } from "../database/connection";
 
 export default class Poap extends Model {}
 
@@ -15,7 +15,7 @@ Poap.init(
       primaryKey: true,
     },
     instance: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
     },

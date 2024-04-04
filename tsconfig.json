@@ -10,7 +10,8 @@
     // "disableSolutionSearching": true,                 /* Opt a project out of multi-project reference checking when editing. */
     // "disableReferencedProjectLoad": true,             /* Reduce the number of projects loaded automatically by TypeScript. */
     /* Language and Environment */
-    "target": "esnext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "module": "CommonJS" /* Specify what module code is generated. */,
+    "target": "ES2022" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     // "lib": [],                                        /* Specify a set of bundled library declaration files that describe the target runtime environment. */
     // "jsx": "preserve",                                /* Specify what JSX code is generated. */
     "experimentalDecorators": true /* Enable experimental support for TC39 stage 2 draft decorators. */,
@@ -22,7 +23,6 @@
     // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
     // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
     /* Modules */
-    "module": "CommonJS" /* Specify what module code is generated. */,
     // "rootDir": "./",                                   /* Specify the root folder within your source files. */
     "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
@@ -91,7 +91,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "isolatedModules": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
     }
   },
   "include": ["**/*.ts", "src/util/ApiError.js"],

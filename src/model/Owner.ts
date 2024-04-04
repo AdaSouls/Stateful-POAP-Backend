@@ -2,7 +2,7 @@ import {
   Model,
   DataTypes
 } from "sequelize";
-import { sequelize } from "@/database/connection";
+import { sequelize } from "../database/connection";
 
 export default class Owner extends Model {}
 

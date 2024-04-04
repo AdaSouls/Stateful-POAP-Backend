@@ -8,7 +8,7 @@ import compression from "compression";
 import httpStatus from "http-status";
 import { config } from "./config/config";
 import * as morgan from "./config/morgan";
-import * as routesV1 from "./route/v1";
+import router from "./route/v1";
 import { checkDown } from "./middleware/down";
 import { errorConverter, errorHandler } from "./middleware/error";
 import { ApiError } from "./util/ApiError";
@@ -67,7 +67,7 @@ app.use(checkDown);
 app.use(cookieParser());
 
 // v1 api routes
-app.use("/v1", routesV1.default(app)); // Pass the express application instance to the routesV1 module
+app.use("/v1", router); // Pass the express application instance to the router module
 
 // send back a 404 error for any unknown api request
 app.use((req: Request, res: Response, next: NextFunction) => {

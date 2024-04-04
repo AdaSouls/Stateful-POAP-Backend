@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Motorverse Asset API Server",
   "main": "src/index.js",
-  "type": "module",
+  "type": "commonjs",
   "engines": {
     "node": "20.x",
     "npm": "10.x"
@@ -88,6 +88,7 @@
     "node-mocks-http": "^1.8.0",
     "nodemon": "^2.0.22",
     "prettier": "^2.0.5",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.2"
   }
 }

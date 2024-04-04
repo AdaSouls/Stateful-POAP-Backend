@@ -1,8 +1,8 @@
 import httpStatus from "http-status";
 import { ApiError } from "../util/ApiError";
 import { NextFunction, Request, Response } from "express";
-import { config } from "@/config";
-import { logger } from "@/config/logger";
+import { config } from "../config";
+import { logger } from "../config/logger";
 
 export const errorConverter = (
   err: any,

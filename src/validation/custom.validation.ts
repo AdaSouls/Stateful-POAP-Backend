@@ -1,4 +1,4 @@
-import { EventType, PoapType } from "@/common/enums";
+import { EventType, PoapType } from "../common/enums";
 
 export const validateEventType = (value: any, helpers: any) => {
   if (!value && helpers.prefs.presence === 'optional') {

@@ -1,4 +1,4 @@
-import { Owner } from "@/model";
+import { Owner } from "../model";
 
 export const getAllOwners = async () => {
   try {

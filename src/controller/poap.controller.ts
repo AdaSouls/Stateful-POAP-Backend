@@ -1,5 +1,5 @@
 import catchAsync from "../util/catchAsync";
-import * as poapService from "@/service/poaps.service";
+import * as poapService from "../service/poaps.service";
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ export const getAllPoaps = catchAsync(async (req, res) => {
  * Get all Poap records by owner's address.
  */
 export const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
-  const { address } = req.body;
+  const { address } = req.params;
   try {
     const poaps = await poapService.getPoapByAddress(address);
     res.send(poaps);
@@ -36,7 +36,7 @@ export const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
  * Get all Poap records by event.
  */
 export const getAllPoapsByEvent = catchAsync(async (req, res) => {
-  const { eventId } = req.body;
+  const { eventId } = req.params;
   try {
     const poaps = await poapService.getAllPoapsByEvent(eventId);
     res.send(poaps);

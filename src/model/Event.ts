@@ -2,7 +2,7 @@ import {
   Model,
   DataTypes,
 } from "sequelize";
-import { sequelize } from "@/database/connection";
+import { sequelize } from "../database/connection";
 
 export default class Event extends Model {}
 
@@ -43,7 +43,7 @@ Event.init(
       allowNull: true,
     },
     year: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     eventUrl: {
@@ -71,7 +71,7 @@ Event.init(
       allowNull: false,
     },
     requestedCodes: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     privateEvent: {
@@ -91,7 +91,7 @@ Event.init(
       allowNull: true,
     },
     amountOfAttendees: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     account: {

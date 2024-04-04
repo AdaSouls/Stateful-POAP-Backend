@@ -1,4 +1,4 @@
-import { Poap } from "@/model";
+import { Poap } from "../model";
 
 export const getAllPoaps = async () => {
   try {

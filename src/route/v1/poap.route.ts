@@ -1,5 +1,5 @@
 import express, { Router } from "express"
-import { getAllPoaps, getAllPoapsByOwnersAddress, getAllPoapsByEvent, getPoapsState } from "@/controller/poap.controller"
+import { getAllPoaps, getAllPoapsByOwnersAddress, getAllPoapsByEvent, getPoapsState } from "../../controller/poap.controller"
 
 const poapRouter: Router = express.Router()
 
