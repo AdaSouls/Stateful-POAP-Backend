@@ -8,11 +8,16 @@ export default class Owner extends Model {}
 
 Owner.init(
   {
-    address: {
+    uuid: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       primaryKey: true,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
     email: {
       type: DataTypes.STRING,

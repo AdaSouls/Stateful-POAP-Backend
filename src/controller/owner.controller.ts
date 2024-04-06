@@ -1,54 +1,62 @@
 import catchAsync from "../util/catchAsync";
-import * as poapService from "../service/poaps.service";
+import * as ownerService from "../service/owners.service";
 
 /*
 |--------------------------------------------------------------------------
-| Poap assets.
+| Owners.
 |--------------------------------------------------------------------------
 */
 
 /**
- * Get all Poap records.
+ * Get all Owners.
  */
-export const getAllPoaps = catchAsync(async (req, res) => {
+export const getAllOwners = catchAsync(async (req, res) => {
   try {
-    const poaps = await poapService.getAllPoaps();
-    res.send(poaps);
+    const owners = await ownerService.getAllOwners();
+    res.send(owners);
   } catch (error) {
     console.log("Error: ", error);
   }
 });
 
 /**
- * Get all Poap records by owner's address.
+ * Get Owner by address.
  */
-export const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
+export const getOwnerByAddress = catchAsync(async (req, res) => {
   const { address } = req.params;
   try {
-    const poaps = await poapService.getPoapByAddress(address);
-    res.send(poaps);
+    const owner = await ownerService.getOwnerByAddress(address);
+    res.send(owner);
   } catch (error) {
     console.log("Error: ", error);
   }
 });
 
 /**
- * Get all Poap records by event.
+ * Get Owner by primary key (UUID).
  */
-export const getAllPoapsByEvent = catchAsync(async (req, res) => {
-  const { eventId } = req.params;
+export const getOwnerByPK = catchAsync(async (req, res) => {
+  const { uuid } = req.params;
   try {
-    const poaps = await poapService.getAllPoapsByEvent(eventId);
-    res.send(poaps);
+    const owner = await ownerService.getOwnerByPK(uuid);
+    res.send(owner);
   } catch (error) {
     console.log("Error: ", error);
   }
 });
 
 /**
- * Get Poap's state.
+ * Create new Owner
  */
-export const getPoapsState = catchAsync(async (req, res) => {});
+export const createNewOwner = catchAsync(async (req, res) => {
+  const { address, email } = req.body;
+  try {
+    const owner = ownerService.createNewOwner(address, email);
+    res.send(owner);
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+});
 
 /*
 |--------------------------------------------------------------------------
