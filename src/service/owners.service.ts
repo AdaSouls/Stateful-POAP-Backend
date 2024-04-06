@@ -36,3 +36,20 @@ export const createNewOwner = async (address: string, email: string) => {
     console.log("Error: ", error);
   }
 };
+
+export const updateOwnersEmail = async (uuid: string, email: string) => {
+  try {
+    const owner = await Owner.update({ email }, { where: { uuid } })
+    return owner;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+export const updateOwnersAddress = async (uuid: string, address: string) => {
+  try {
+    const owner = await Owner.update({ address }, { where: { uuid } })
+    return owner;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};

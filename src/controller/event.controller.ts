@@ -47,7 +47,7 @@ export const createEvent = catchAsync(async (req, res) => {
   }
   try {
     const eventCreated = await eventService.createEvent(event);
-    // res.send(events)
+    res.send(eventCreated)
   } catch (error) {
     console.log("Error: ", error);
   }
