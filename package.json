@@ -13,7 +13,7 @@
     "dev": "cross-env NODE_ENV=local nodemon src/index.js",
     "dev2": "cross-env nodemon src/index.ts",
     "dev3": "npm run build && npm run serve",
-    "serve": "node -r dotenv/config build/src/index.js",
+    "serve": "nodemon -r dotenv/config build/src/index.js",
     "build": "npm run clean && npm run build-ts",
     "migrator": "node src/database/migrator.js",
     "test": "jest -i --colors --verbose --detectOpenHandles",

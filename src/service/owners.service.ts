@@ -18,6 +18,15 @@ export const getOwnerByAddress = async (address: string) => {
   }
 };
 
+export const getOwnerByEmail = async (email: string) => {
+  try {
+    const owner = await Owner.findOne({ where: { email } });
+    return owner;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
 export const getOwnerByPK = async (uuid: string) => {
   try {
     const owner = await Owner.findByPk(uuid);
@@ -28,9 +37,13 @@ export const getOwnerByPK = async (uuid: string) => {
 };
 
 export const createNewOwner = async (address: string, email: string) => {
-  const uuid = crypto.randomUUID();
   try {
+    if (!address && !email) {
+      return { message: "Address and/or email are required" };
+    }
+    const uuid = crypto.randomUUID();
     const owner = await Owner.create({ uuid, address, email });
+    console.log("🚀 ~ createNewOwner ~ owner:", owner)
     return owner;
   } catch (error) {
     console.log("Error: ", error);

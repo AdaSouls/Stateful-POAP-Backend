@@ -22,6 +22,7 @@ Owner.init(
     email: {
       type: DataTypes.STRING,
       allowNull: true,
+      unique: true,
     },
   },
   {

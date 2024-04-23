@@ -23,7 +23,10 @@ export const getAllPoaps = catchAsync(async (req, res) => {
  * Get all Poap records by owner's address.
  */
 export const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
-  const { address } = req.params;
+  const { address } = req.query;
+  if (typeof address !== "string") {
+    return res.status(400).send({ message: "Address must be a string" });
+  }
   try {
     const poaps = await poapService.getPoapByAddress(address);
     res.send(poaps);
@@ -36,7 +39,10 @@ export const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
  * Get all Poap records by event.
  */
 export const getAllPoapsByEvent = catchAsync(async (req, res) => {
-  const { eventId } = req.params;
+  const { eventId } = req.query;
+  if (typeof eventId !== "string") {
+    return res.status(400).send({ message: "EventId must be a string" });
+  }
   try {
     const poaps = await poapService.getAllPoapsByEvent(eventId);
     res.send(poaps);
