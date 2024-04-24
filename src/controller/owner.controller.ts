@@ -1,8 +1,6 @@
 import catchAsync from "../util/catchAsync";
 import * as ownerService from "../service/owners.service";
-import { off } from "process";
-import pagination from "@/util/pagination";
-import { type } from "os";
+import pagination from "../util/pagination";
 
 /*
 |--------------------------------------------------------------------------

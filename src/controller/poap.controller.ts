@@ -1,6 +1,6 @@
 import catchAsync from "../util/catchAsync";
 import * as poapService from "../service/poaps.service";
-import pagination from "@/util/pagination";
+import pagination from "../util/pagination";
 
 /*
 |--------------------------------------------------------------------------

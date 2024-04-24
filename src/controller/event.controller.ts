@@ -1,8 +1,8 @@
 import catchAsync from "../util/catchAsync";
 import * as eventService from "../service/events.service";
 import * as ownerService from "../service/owners.service";
-import { IEvent } from "@/common/interfaces";
-import pagination from "@/util/pagination";
+import { IEvent } from "../common/interfaces";
+import pagination from "../util/pagination";
 
 /*
 |--------------------------------------------------------------------------

@@ -1,4 +1,3 @@
-import { IEvent } from "@/common/interfaces";
 import { Event } from "../model";
 
 export const getAllEvents = async (offset: number, limit: number) => {
