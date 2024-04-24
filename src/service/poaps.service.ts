@@ -1,8 +1,8 @@
 import { Poap } from "../model";
 
-export const getAllPoaps = async () => {
+export const getAllPoaps = async (offset: number, limit: number) => {
   try {
-    const poaps = await Poap.findAll();
+    const poaps = await Poap.findAll({ offset, limit });
     return poaps;
   } catch (error) {
     console.log("Error: ", error);

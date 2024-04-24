@@ -1,5 +1,6 @@
 import catchAsync from "../util/catchAsync";
 import * as poapService from "../service/poaps.service";
+import pagination from "@/util/pagination";
 
 /*
 |--------------------------------------------------------------------------
@@ -11,8 +12,13 @@ import * as poapService from "../service/poaps.service";
  * Get all Poap records.
  */
 export const getAllPoaps = catchAsync(async (req, res) => {
+  const {page, limit} = req.query;
+  let paginationOffset, paginationLimit;
+  if (typeof page === "string" && typeof limit === "string") {
+    ({paginationOffset, paginationLimit} = pagination(parseInt(page), parseInt(limit)));
+  } else { ({paginationOffset, paginationLimit} = pagination())} 
   try {
-    const poaps = await poapService.getAllPoaps();
+    const poaps = await poapService.getAllPoaps(paginationOffset, paginationLimit);
     res.send(poaps);
   } catch (error) {
     console.log("Error: ", error);

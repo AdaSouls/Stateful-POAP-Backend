@@ -1,8 +1,8 @@
 import { Owner } from "../model";
 
-export const getAllOwners = async () => {
+export const getAllOwners = async (offset: number, limit: number) => {
   try {
-    const owners = await Owner.findAll();
+    const owners = await Owner.findAll({ offset, limit });
     return owners;
   } catch (error) {
     console.log("Error: ", error);
@@ -43,7 +43,7 @@ export const createNewOwner = async (address: string, email: string) => {
     }
     const uuid = crypto.randomUUID();
     const owner = await Owner.create({ uuid, address, email });
-    console.log("🚀 ~ createNewOwner ~ owner:", owner)
+    console.log("🚀 ~ createNewOwner ~ owner:", owner);
     return owner;
   } catch (error) {
     console.log("Error: ", error);
@@ -52,7 +52,7 @@ export const createNewOwner = async (address: string, email: string) => {
 
 export const updateOwnersEmail = async (uuid: string, email: string) => {
   try {
-    const owner = await Owner.update({ email }, { where: { uuid } })
+    const owner = await Owner.update({ email }, { where: { uuid } });
     return owner;
   } catch (error) {
     console.log("Error: ", error);
@@ -60,7 +60,7 @@ export const updateOwnersEmail = async (uuid: string, email: string) => {
 };
 export const updateOwnersAddress = async (uuid: string, address: string) => {
   try {
-    const owner = await Owner.update({ address }, { where: { uuid } })
+    const owner = await Owner.update({ address }, { where: { uuid } });
     return owner;
   } catch (error) {
     console.log("Error: ", error);

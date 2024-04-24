@@ -1,9 +1,9 @@
 import { IEvent } from "@/common/interfaces";
 import { Event } from "../model";
 
-export const getAllEvents = async () => {
+export const getAllEvents = async (offset: number, limit: number) => {
   try {
-    const events = await Event.findAll();
+    const events = await Event.findAll({ offset, limit });
     return events;
   } catch (error) {
     console.log("Error: ", error);

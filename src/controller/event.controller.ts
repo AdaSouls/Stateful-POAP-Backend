@@ -2,6 +2,7 @@ import catchAsync from "../util/catchAsync";
 import * as eventService from "../service/events.service";
 import * as ownerService from "../service/owners.service";
 import { IEvent } from "@/common/interfaces";
+import pagination from "@/util/pagination";
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,13 @@ import { IEvent } from "@/common/interfaces";
  * Get all Event records.
  */
 export const getAllEvents = catchAsync(async (req, res) => {
+  const {page, limit} = req.query;
+  let paginationOffset, paginationLimit;
+  if (typeof page === "string" && typeof limit === "string") {
+    ({paginationOffset, paginationLimit} = pagination(parseInt(page), parseInt(limit)));
+  } else { ({paginationOffset, paginationLimit} = pagination())} 
   try {
-    const events = await eventService.getAllEvents();
+    const events = await eventService.getAllEvents(paginationOffset, paginationLimit);
     res.send(events)
   } catch (error) {
     console.log("Error: ", error);
