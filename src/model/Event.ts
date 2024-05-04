@@ -102,6 +102,14 @@ Event.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    poapsToBeMinted: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    mintedPoaps: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     tableName: "events",

@@ -82,6 +82,7 @@ export const createNewOwner = catchAsync(async (req, res) => {
     const owner = ownerService.createNewOwner(address, email);
     console.log("🚀 ~ createNewOwner ~ owner:", owner)
     res.send(owner);
+    return owner;
   } catch (error) {
     console.log("Error: ", error);
   }

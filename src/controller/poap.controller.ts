@@ -61,3 +61,17 @@ export const getAllPoapsByEvent = catchAsync(async (req, res) => {
  * Get Poap's state.
  */
 export const getPoapsState = catchAsync(async (req, res) => {});
+
+/**
+ * Get Poap's state.
+ */
+export const mintPoap = catchAsync(async (req, res) => {
+  const { owner, eventId } = req.body;
+  try {
+    const poap = await poapService.mintPoap( owner, eventId );
+    res.send(poap);
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+
+});
