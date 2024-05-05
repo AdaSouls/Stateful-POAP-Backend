@@ -72,7 +72,7 @@ export const mintPoap = async (owner: IOwner, eventId: string) => {
         { mintedPoaps: mintableAmount.mintedPoaps + 1 },
         { where: { eventId } }
       );
-      console.log("🚀 ~ mintPoap ~ updatedMintedAmount:", updatedMintedAmount);
+      console.log("🚀 ~ mintPoap ~ updatedMintedAmount:", updatedMintedAmount)
       return poap;
     }
   } catch (error) {
