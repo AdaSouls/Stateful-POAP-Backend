@@ -1,5 +1,26 @@
 import { Event, Owner } from "../model";
 import { eventTable } from "../util/tables";
+// import { poapContract } from "../util/contractsInteractions";
+import {
+  createEventId,
+  getOwner,
+  getTokenEventId,
+  isAdmin,
+} from "../util/smartContracts/poapContractInteractions";
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.join(__dirname, "../.env") });
+
+const {
+  ADDRESS_0,
+  ADDRESS_1,
+  GANACHE_URL,
+  POAP_ADDRESS,
+  SOULBOUND_ADDRESS,
+  CONSENSUAL_ADDRESS,
+  HH_ACCOUNT_0,
+} = process.env;
 
 export const getAllEvents = async (offset: number, limit: number) => {
   try {
@@ -38,10 +59,10 @@ export const getEventMintableAmount = async (eventId: string) => {
       where: { eventId },
       attributes: [eventTable.poapsToBeMinted, eventTable.mintedPoaps],
     });
-    return ({
+    return {
       poapsToBeMinted: mintableAmount?.dataValues.poapsToBeMinted,
       mintedPoaps: mintableAmount?.dataValues.mintedPoaps,
-    });
+    };
   } catch (error) {
     console.log("Error: ", error);
   }
@@ -68,8 +89,20 @@ export const createEvent = async (event: any, ownerId: string) => {
   const eventId = crypto.randomUUID();
   const eventInfo = { ...event, ownerId, eventId };
   try {
-    const eventCreated = await Event.create(eventInfo);
-    return eventCreated;
+    const eventCreated = await createEventId(333, 59, 1717977600, HH_ACCOUNT_0 as string)
+    console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated)
+
+    // const eventCreated = await getOwner()
+    // console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated)
+
+    // const eventCreated = await isAdmin(ADDRESS_1 as string)
+    // console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated)
+
+    // const tokenEventId = await getTokenEventId(333);
+    // console.log("🚀 ~ createEvent ~ tokenEventId:", tokenEventId);
+
+    // const eventCreated = await Event.create(eventInfo);
+    // return eventCreated;
   } catch (error) {
     console.log("Error: ", error);
   }

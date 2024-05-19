@@ -1,6 +1,16 @@
 import { IOwner } from "@/common/interfaces";
 import { Event, Poap } from "../model";
+import dotenv from "dotenv";
+import path from "path";
 import * as eventService from "./events.service";
+import { mintToken } from "../util/smartContracts/poapContractInteractions";
+
+dotenv.config({ path: path.join(__dirname, "../.env") });
+
+const {
+  HH_ACCOUNT_0,
+  HH_ACCOUNT_1,
+} = process.env;
 
 export const getAllPoaps = async (offset: number, limit: number) => {
   try {
@@ -62,6 +72,8 @@ export const mintPoap = async (owner: IOwner, eventId: string) => {
   };
   console.log("🚀 ~ mintPoap ~ mintInfo:", mintInfo);
   try {
+    const mintedTokenToBlockchain = await mintToken(333, HH_ACCOUNT_1 as string, "Primer evento de prueba");
+    console.log("🚀 ~ mintPoap ~ mintedTokenToBlockchain:", mintedTokenToBlockchain)
     if (
       mintableAmount &&
       mintableAmount.poapsToBeMinted - mintableAmount.mintedPoaps > 0

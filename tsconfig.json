@@ -91,10 +91,10 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "isolatedModules": true,
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["**/*.ts", "src/util/ApiError.js"],
+  "include": ["src/**/*.ts", "artifacts/**/*.json"],
   "exclude": [
     "node-modules",
     "jest.config.js",

@@ -63,9 +63,9 @@ export async function basicDbSync() {
   try {
     logger.info(`POSTGRES DB INIT (basic model sync): ${config.db.sync}`);
     if (config.db.sync === 'all') {
-      await sequelize.sync({ alter: true });
+      await sequelize.sync({ alter: true, logging: console.log });
     } else if (config.db.sync === 'table') {
-      await sequelize.sync({ alter: false });
+      await sequelize.sync({ alter: false, logging: console.log });
       // await sequelize.sync({ force: true });
     }
     logger.info('...POSTGRES SYNC DONE');
