@@ -8,11 +8,15 @@ export default class Poap extends Model {}
 
 Poap.init(
   {
-    poap: {
+    uuid: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       primaryKey: true,
+    },
+    poap: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     instance: {
       type: DataTypes.INTEGER,
