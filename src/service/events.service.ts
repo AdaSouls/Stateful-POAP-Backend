@@ -1,14 +1,13 @@
 import { Event, Owner } from "../model";
 import { eventTable } from "../util/tables";
 // import { poapContract } from "../util/contractsInteractions";
-import {
-  createEventId,
-  getOwner,
-  getTokenEventId,
-  isAdmin,
-} from "../util/smartContracts/poapContractInteractions";
+import * as poap from "../util/smartContracts/poapContractInteractions";
+import * as soulbound from "../util/smartContracts/soulboundContractInteractions";
+import * as consensual from "../util/smartContracts/consensualContractInteractions";
 import dotenv from "dotenv";
 import path from "path";
+import { PoapType } from "../common/enums";
+import { IEvent } from "../common/interfaces";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
@@ -85,24 +84,60 @@ export const updateMintedPoapsAmount = async (
   }
 };
 
-export const createEvent = async (event: any, ownerId: string) => {
+export const getEventContractType = async (eventId: string) => {
+  try {
+    const event = await Event.findOne({
+      where: { eventId },
+      attributes: [eventTable.poapType],
+    });
+    return event?.dataValues.poapType;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
+export const createEvent = async (event: IEvent, ownerId: string) => {
   const eventId = crypto.randomUUID();
   const eventInfo = { ...event, ownerId, eventId };
+  const timestamp = Math.floor(
+    eventInfo.expiryDate
+      ? Math.floor(eventInfo.expiryDate.getDate() / 1000)
+      : Date.now() / 1000 + 86400 * 7
+  );
   try {
-    const eventCreated = await createEventId(333, 59, 1717977600, HH_ACCOUNT_0 as string)
-    console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated)
+    if (eventInfo.poapType === PoapType.Poap) {
+      const eventCreated = await poap.createEventId(
+        eventInfo.idInContract,
+        eventInfo.poapsToBeMinted,
+        timestamp,
+        HH_ACCOUNT_0 as string
+      );
+      console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
+    }
+    if (eventInfo.poapType === PoapType.Soulbound) {
+      const eventCreated = await soulbound.createEventId(
+        eventInfo.idInContract,
+        eventInfo.poapsToBeMinted,
+        timestamp,
+        HH_ACCOUNT_0 as string
+      );
+      console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
+    }
+    if (eventInfo.poapType === PoapType.Consensual) {
+      const eventCreated = await consensual.createEventId(
+        eventInfo.idInContract,
+        eventInfo.poapsToBeMinted,
+        timestamp,
+        HH_ACCOUNT_0 as string
+      );
+      console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
+    } else {
+      console.log("Error: Event type not found");
+      return;
+    }
 
-    // const eventCreated = await getOwner()
-    // console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated)
-
-    // const eventCreated = await isAdmin(ADDRESS_1 as string)
-    // console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated)
-
-    // const tokenEventId = await getTokenEventId(333);
-    // console.log("🚀 ~ createEvent ~ tokenEventId:", tokenEventId);
-
-    // const eventCreated = await Event.create(eventInfo);
-    // return eventCreated;
+    const event = await Event.create(eventInfo);
+    return event;
   } catch (error) {
     console.log("Error: ", error);
   }

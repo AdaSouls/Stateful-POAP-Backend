@@ -14,6 +14,10 @@ Event.init(
       unique: true,
       primaryKey: true,
     },
+    idInContract: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -2,6 +2,7 @@ export const eventTable = {
   mintedPoaps: "mintedPoaps",
   poapsToBeMinted: "poapsToBeMinted",
   eventId: "eventId",
+  idInContract: "idInContract",
   poapType: "poapType",
   account: "account",
   amountOfAttendees: "amountOfAttendees",

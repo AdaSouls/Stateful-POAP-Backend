@@ -23,9 +23,9 @@ export interface IEvent {
   amountOfAttendees?: number;
   account?: string;
   poapType: PoapType;
-  poapToBeMinted: number;
+  poapsToBeMinted: number;
   mintedPoaps: number;
-  // state
+  idInContract: number;
 }
 
 export interface IOwner {
