@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { PoapType } from "../common/enums";
 import { IEvent } from "../common/interfaces";
+import { decodeStatus, encodeStatus } from "../util/smartContracts/statusEncoder";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
@@ -99,44 +100,51 @@ export const getEventContractType = async (eventId: string) => {
 export const createEvent = async (event: IEvent, ownerId: string) => {
   const eventId = crypto.randomUUID();
   const eventInfo = { ...event, ownerId, eventId };
-  const timestamp = Math.floor(
-    eventInfo.expiryDate
-      ? Math.floor(eventInfo.expiryDate.getDate() / 1000)
-      : Date.now() / 1000 + 86400 * 7
-  );
+  console.log("🚀 ~ createEvent ~ eventInfo.expiryDate:", eventInfo.expiryDate)
+  // const timestamp = Math.floor(
+  //   eventInfo.expiryDate
+  //     ? eventInfo.expiryDate.getDate() / 1000
+  //     : Date.now() / 1000 + 86400 * 7
+  // );
   try {
-    if (eventInfo.poapType === PoapType.Poap) {
-      const eventCreated = await poap.createEventId(
-        eventInfo.idInContract,
-        eventInfo.poapsToBeMinted,
-        timestamp,
-        HH_ACCOUNT_0 as string
-      );
-      console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
-    }
-    if (eventInfo.poapType === PoapType.Soulbound) {
-      const eventCreated = await soulbound.createEventId(
-        eventInfo.idInContract,
-        eventInfo.poapsToBeMinted,
-        timestamp,
-        HH_ACCOUNT_0 as string
-      );
-      console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
-    }
-    if (eventInfo.poapType === PoapType.Consensual) {
-      const eventCreated = await consensual.createEventId(
-        eventInfo.idInContract,
-        eventInfo.poapsToBeMinted,
-        timestamp,
-        HH_ACCOUNT_0 as string
-      );
-      console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
-    } else {
-      console.log("Error: Event type not found");
-      return;
-    }
+    // if (eventInfo.poapType === PoapType.Poap) {
+    //   const eventCreated = await poap.createEventId(
+    //     eventInfo.idInContract,
+    //     eventInfo.poapsToBeMinted,
+    //     timestamp,
+    //     HH_ACCOUNT_0 as string
+    //   );
+    //   console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
+    // }
+    // if (eventInfo.poapType === PoapType.Soulbound) {
+    //   const eventCreated = await soulbound.createEventId(
+    //     eventInfo.idInContract,
+    //     eventInfo.poapsToBeMinted,
+    //     timestamp,
+    //     HH_ACCOUNT_0 as string
+    //   );
+    //   console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
+    // }
+    // if (eventInfo.poapType === PoapType.Consensual) {
+    //   const eventCreated = await consensual.createEventId(
+    //     eventInfo.idInContract,
+    //     eventInfo.poapsToBeMinted,
+    //     timestamp,
+    //     HH_ACCOUNT_0 as string
+    //   );
+    //   console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
+    // } else {
+    //   console.log("Error: Event type not found");
+    //   return;
+    // }
 
     const event = await Event.create(eventInfo);
+
+    // The creation returns an object, not an array. Therefore, the encodeStatus function should be called with [event.dataValues] instead of event.dataValues  
+    const encoded = encodeStatus([event.dataValues]);
+    const encodedStatus = decodeStatus(encoded);
+    
+
     return event;
   } catch (error) {
     console.log("Error: ", error);

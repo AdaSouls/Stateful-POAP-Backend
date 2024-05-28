@@ -67,32 +67,42 @@ export const createEvent = catchAsync(async (req, res) => {
   try {
     let returnedOwner;
     let ownerCreated;
-    if (!owner.uuid) {
-      // console.log("Adentro de !owner.uuid")
-      ownerCreated = await ownerService.createNewOwner(
-        owner.address,
-        owner.email
-      );
-      if (owner.address) {
-        // console.log("Adentro de owner.address")
-        returnedOwner = await ownerService.getOwnerByAddress(owner.address);
-      } else if (owner.email) {
-        // console.log("Adentro de owner.email")
-        returnedOwner = await ownerService.getOwnerByEmail(owner.email);
-      }
-      if (returnedOwner) {
-        // console.log("🚀 ~ createEvent ~ returnedOwner.dataValues.uuid:", returnedOwner.dataValues.uuid)
-        // console.log("🚀 ~ createEvent ~ event:", event)
-        const eventCreated = await eventService.createEvent(
-          event,
-          returnedOwner.dataValues.uuid
-        );
-        /**
-         * Function call to ethers to create event in Blockchain
-         */
-        res.send(eventCreated);
-      }
-    }
+    // if (!owner.uuid) {
+    //   // console.log("Adentro de !owner.uuid")
+    //   ownerCreated = await ownerService.createNewOwner(
+    //     owner.address,
+    //     owner.email
+    //   );
+    //   if (owner.address) {
+    //     // console.log("Adentro de owner.address")
+    //     returnedOwner = await ownerService.getOwnerByAddress(owner.address);
+    //   } else if (owner.email) {
+    //     // console.log("Adentro de owner.email")
+    //     returnedOwner = await ownerService.getOwnerByEmail(owner.email);
+    //   }
+    //   if (returnedOwner) {
+    //     // console.log("🚀 ~ createEvent ~ returnedOwner.dataValues.uuid:", returnedOwner.dataValues.uuid)
+    //     // console.log("🚀 ~ createEvent ~ event:", event)
+    //     const eventCreated = await eventService.createEvent(
+    //       event,
+    //       returnedOwner.dataValues.uuid
+    //     );
+    //     /**
+    //      * Function call to ethers to create event in Blockchain
+    //      */
+    //     res.send(eventCreated);
+    //   }
+    // }
+    if (owner.uuid) {
+    const eventCreated = await eventService.createEvent(
+      event,
+      owner.uuid
+    );
+    /**
+     * Function call to ethers to create event in Blockchain
+     */
+    res.send(eventCreated);
+  }
   } catch (error) {
     console.log("Error: ", error);
   }

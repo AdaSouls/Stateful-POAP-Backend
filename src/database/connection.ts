@@ -15,7 +15,7 @@ let sequelize: Sequelize;
 if (POSTGRESQL_URL) {
   console.log("POSTGRES connection: ", POSTGRESQL_URL);
   sequelize = new Sequelize(POSTGRESQL_URL, {
-    logging: console.log,
+    // logging: console.log,
     native: false,
     dialectOptions: {
       ssl: false

@@ -63,8 +63,9 @@ export async function basicDbSync() {
     if (config.db.sync === "all") {
       await sequelize.sync({ alter: true, logging: console.log });
     } else if (config.db.sync === "table") {
+      await sequelize.sync({ alter: false });
       // await sequelize.sync({ alter: false, logging: console.log });
-      await sequelize.sync({ force: true, logging: console.log });
+      // await sequelize.sync({ force: true, logging: console.log });
     }
     logger.info("...POSTGRES SYNC DONE");
   } catch (e) {
