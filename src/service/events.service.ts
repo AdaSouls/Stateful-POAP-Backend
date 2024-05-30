@@ -8,7 +8,6 @@ import dotenv from "dotenv";
 import path from "path";
 import { PoapType } from "../common/enums";
 import { IEvent } from "../common/interfaces";
-import { decodeStatus, encodeStatus } from "../util/smartContracts/statusEncoder";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
@@ -139,10 +138,6 @@ export const createEvent = async (event: IEvent, ownerId: string) => {
     // }
 
     const event = await Event.create(eventInfo);
-
-    // The creation returns an object, not an array. Therefore, the encodeStatus function should be called with [event.dataValues] instead of event.dataValues  
-    const encoded = encodeStatus([event.dataValues]);
-    const encodedStatus = decodeStatus(encoded);
     
 
     return event;
