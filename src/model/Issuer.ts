@@ -11,11 +11,19 @@ Issuer.init(
       unique: true,
       primaryKey: true,
     },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    organization: {
       type: DataTypes.STRING,
       allowNull: false,
     },
