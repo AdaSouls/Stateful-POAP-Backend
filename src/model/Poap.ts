@@ -1,10 +1,23 @@
-import {
-  Model,
-  DataTypes,
-} from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database/connection";
+import Event from "./Event";
 
-export default class Poap extends Model {}
+export default class Poap extends Model {
+  async addEvent(event: Event) {
+    if (!(event instanceof Event)) {
+      throw new Error("Parameter must be an instance of Event");
+    }
+    await this.addEvent(event);
+    return this;
+  }
+  async removeEvent(event: Event) {
+    if (!(event instanceof Event)) {
+      throw new Error("Parameter must be an instance of Event");
+    }
+    await this.removeEvent(event);
+    return this;
+  }
+}
 
 Poap.init(
   {
@@ -26,7 +39,7 @@ Poap.init(
   },
   {
     tableName: "poaps",
-    sequelize
+    sequelize,
     // schema: config.postgresql.schema,
     // indexes: [
     //   {

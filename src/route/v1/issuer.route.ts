@@ -4,7 +4,6 @@ import * as issuerController from "../../controller/issuer.controller"
 const issuerRouter: Router = express.Router()
 
 issuerRouter.get("/getAll", issuerController.getAllIssuers)
-// issuerRouter.get("/getIssuerByAddress", issuerController.getIssuerByAddress)
 issuerRouter.get("/getIssuerByEmail", issuerController.getIssuerByEmail)
 issuerRouter.get("/getIssuerByPK", issuerController.getIssuerByPK)
 issuerRouter.post("/createIssuer", issuerController.createNewIssuer)

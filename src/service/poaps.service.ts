@@ -117,3 +117,22 @@ export const updatePoapMetadata = async (poapUuid: string, eventId: string) => {
     console.log("Error: ", error);
   }
 };
+
+export const addEventToPoap = async (poapUuid: string, eventUuid: string) => {
+  try {
+    const poap = await Poap.findByPk(poapUuid);
+    const event = await Event.findByPk(eventUuid);
+    if (!poap) {
+      return { message: "Poap not found" };
+    }
+    if (!event) {
+      return { message: "Event not found" };
+    }
+    if (poap && event) {
+      const updatedPoap = await poap.addEvent(event);
+      return updatedPoap;
+    }
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+}
