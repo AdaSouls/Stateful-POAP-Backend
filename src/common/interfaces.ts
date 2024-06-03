@@ -35,3 +35,13 @@ export interface IOwner {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IIssuer {
+  uuid?: string;
+  address: string;
+  email: string;
+  name: string;
+  organization: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

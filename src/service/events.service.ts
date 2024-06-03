@@ -1,4 +1,4 @@
-import { Event, Owner } from "../model";
+import { Event, Issuer, Owner } from "../model";
 import { eventTable } from "../util/tables";
 // import { poapContract } from "../util/contractsInteractions";
 import * as poap from "../util/smartContracts/poapContractInteractions";
@@ -26,7 +26,7 @@ export const getAllEvents = async (offset: number, limit: number) => {
     const events = await Event.findAll({
       offset,
       limit,
-      include: { model: Owner },
+      include: { model: Issuer },
     });
     return events;
   } catch (error) {
@@ -36,7 +36,10 @@ export const getAllEvents = async (offset: number, limit: number) => {
 
 export const getEventByAddress = async (address: string) => {
   try {
-    const event = await Event.findOne({ where: { address } });
+    const event = await Event.findOne({
+      where: { address },
+      include: { model: Issuer },
+    });
     return event;
   } catch (error) {
     console.log("Error: ", error);
@@ -45,7 +48,7 @@ export const getEventByAddress = async (address: string) => {
 
 export const getEventByPK = async (eventId: string) => {
   try {
-    const event = await Event.findByPk(eventId);
+    const event = await Event.findByPk(eventId, { include: { model: Issuer } });
     return event;
   } catch (error) {
     console.log("Error: ", error);
@@ -96,25 +99,29 @@ export const getEventContractType = async (eventId: string) => {
   }
 };
 
-export const createEvent = async (event: IEvent, ownerId: string) => {
+export const createEvent = async (event: IEvent, issuerId: string) => {
   const eventId = crypto.randomUUID();
-  const eventInfo = { ...event, ownerId, eventId };
-  console.log("🚀 ~ createEvent ~ eventInfo.expiryDate:", eventInfo.expiryDate)
-  // const timestamp = Math.floor(
-  //   eventInfo.expiryDate
-  //     ? eventInfo.expiryDate.getDate() / 1000
-  //     : Date.now() / 1000 + 86400 * 7
-  // );
+  const eventInfo = { ...event, issuerId, eventId };
+  console.log("🚀 ~ createEvent ~ eventInfo.expiryDate:", eventInfo.expiryDate);
+  const timestamp = Math.floor(
+    eventInfo.expiryDate
+      ? eventInfo.expiryDate.getDate() / 1000
+      : Date.now() / 1000 + 86400 * 365 * 99
+  );
+  if (!issuerId) {
+    console.log("Error: Owner not found");
+    return;
+  }
   try {
-    // if (eventInfo.poapType === PoapType.Poap) {
-    //   const eventCreated = await poap.createEventId(
-    //     eventInfo.idInContract,
-    //     eventInfo.poapsToBeMinted,
-    //     timestamp,
-    //     HH_ACCOUNT_0 as string
-    //   );
-    //   console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
-    // }
+    if (eventInfo.poapType === PoapType.Poap) {
+      const eventCreated = await poap.createEventId(
+        eventInfo.idInContract,
+        eventInfo.poapsToBeMinted,
+        timestamp,
+        HH_ACCOUNT_0 as string
+      );
+      console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
+    }
     // if (eventInfo.poapType === PoapType.Soulbound) {
     //   const eventCreated = await soulbound.createEventId(
     //     eventInfo.idInContract,
@@ -138,7 +145,6 @@ export const createEvent = async (event: IEvent, ownerId: string) => {
     // }
 
     const event = await Event.create(eventInfo);
-    
 
     return event;
   } catch (error) {

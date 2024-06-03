@@ -42,7 +42,23 @@ export const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
     return res.status(400).send({ message: "Address must be a string" });
   }
   try {
-    const poaps = await poapService.getPoapByAddress(address);
+    const poaps = await poapService.getAllPoapsByOwnersAddress(address);
+    res.send(poaps);
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+});
+
+/**
+ * Get Poap records by primary key.
+ */
+export const getPoapByPK = catchAsync(async (req, res) => {
+  const { poapPk } = req.query;
+  if (typeof poapPk !== "string") {
+    return res.status(400).send({ message: "PoapPk must be a string" });
+  }
+  try {
+    const poaps = await poapService.getPoapByPK(poapPk);
     res.send(poaps);
   } catch (error) {
     console.log("Error: ", error);
@@ -90,6 +106,19 @@ export const updatePoapMetadata = catchAsync(async (req, res) => {
   const { poapUuid, eventId } = req.body
   try {
     const updatedPoap = await poapService.updatePoapMetadata(poapUuid, eventId);
+    res.send(updatedPoap);
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+})
+
+/**
+ * Update Poap's event relation.
+ */
+export const addEventToPoap = catchAsync(async (req, res) => {
+  const { poapUuid, eventId } = req.body
+  try {
+    const updatedPoap = await poapService.addEventToPoap(poapUuid, eventId);
     res.send(updatedPoap);
   } catch (error) {
     console.log("Error: ", error);

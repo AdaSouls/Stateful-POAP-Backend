@@ -12,7 +12,21 @@ const { HH_ACCOUNT_0, HH_ACCOUNT_1 } = process.env;
 
 export const getAllPoaps = async (offset: number, limit: number) => {
   try {
-    const poaps = await Poap.findAll({ offset, limit });
+    const poaps = await Poap.findAll({
+      offset,
+      limit,
+      include: { model: Event },
+    });
+    return poaps;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
+
+export const getAllPoapsByOwnersAddress = async (ownerId: string) => {
+  try {
+    const poaps = await Poap.findAll({ where: { ownerId } });
     return poaps;
   } catch (error) {
     console.log("Error: ", error);
@@ -24,24 +38,6 @@ export const getAllPoapsByEvent = async (eventId: string) => {
   try {
     const poaps = await Poap.findAll({ where: { eventId } });
     return poaps;
-  } catch (error) {
-    console.log("Error: ", error);
-  }
-};
-
-export const getAllPoapsByOwnersAddress = async (ownerId: string) => {
-  try {
-    const poaps = await Poap.findAll({ where: { ownerId } });
-    return poaps;
-  } catch (error) {
-    console.log("Error: ", error);
-  }
-};
-
-export const getPoapByAddress = async (address: string) => {
-  try {
-    const poap = await Poap.findOne({ where: { address } });
-    return poap;
   } catch (error) {
     console.log("Error: ", error);
   }
@@ -68,7 +64,7 @@ export const mintPoap = async (owner: IOwner, eventId: string) => {
     poap: eventId,
     instance: mintableAmount?.mintedPoaps + 1,
   };
-  const hashedInfo = encodeStatus(event?.dataValues)
+  const hashedInfo = encodeStatus(event?.dataValues);
   try {
     const mintedTokenToBlockchain = await mintToken(
       event?.dataValues.idInContract as number,
@@ -135,4 +131,4 @@ export const addEventToPoap = async (poapUuid: string, eventUuid: string) => {
   } catch (error) {
     console.log("Error: ", error);
   }
-}
+};
