@@ -27,10 +27,10 @@ Poap.init(
       unique: true,
       primaryKey: true,
     },
-    poap: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    // poap: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    // },
     instance: {
       type: DataTypes.INTEGER,
       allowNull: false,

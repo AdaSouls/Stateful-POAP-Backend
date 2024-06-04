@@ -57,24 +57,27 @@ export const mintPoap = async (owner: IOwner, eventId: string) => {
   const mintableAmount = await eventService.getEventMintableAmount(eventId);
   const event = await eventService.getEventByPK(eventId);
   console.log("🚀 ~ mintPoap ~ mintableAmount:", mintableAmount);
-  const mintInfo = {
-    ownerId: owner.uuid,
-    eventId,
-    uuid,
-    poap: eventId,
-    instance: mintableAmount?.mintedPoaps + 1,
-  };
+  let mintInfo
+  if (mintableAmount) {
+    mintInfo = {
+      ownerId: owner.uuid,
+      eventId,
+      uuid,
+      // poap: eventId,
+      instance: mintableAmount?.mintedPoaps + 1,
+    };
+  }
   const hashedInfo = encodeStatus(event?.dataValues);
   try {
-    const mintedTokenToBlockchain = await mintToken(
-      event?.dataValues.idInContract as number,
-      HH_ACCOUNT_1 as string,
-      hashedInfo
-    );
-    console.log(
-      "🚀 ~ mintPoap ~ mintedTokenToBlockchain:",
-      mintedTokenToBlockchain
-    );
+    // const mintedTokenToBlockchain = await mintToken(
+    //   event?.dataValues.idInContract as number,
+    //   HH_ACCOUNT_1 as string,
+    //   hashedInfo
+    // );
+    // console.log(
+    //   "🚀 ~ mintPoap ~ mintedTokenToBlockchain:",
+    //   mintedTokenToBlockchain
+    // );
     if (
       mintableAmount &&
       mintableAmount.poapsToBeMinted - mintableAmount.mintedPoaps > 0

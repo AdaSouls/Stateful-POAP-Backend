@@ -55,16 +55,26 @@ export const getEventByPK = async (eventId: string) => {
   }
 };
 
-export const getEventMintableAmount = async (eventId: string) => {
+export const getEventMintableAmount = async (
+  eventId: string
+): Promise<{ poapsToBeMinted: number; mintedPoaps: number }| undefined> => {
   try {
     const mintableAmount = await Event.findOne({
       where: { eventId },
       attributes: [eventTable.poapsToBeMinted, eventTable.mintedPoaps],
     });
-    return {
-      poapsToBeMinted: mintableAmount?.dataValues.poapsToBeMinted,
-      mintedPoaps: mintableAmount?.dataValues.mintedPoaps,
-    };
+    if (
+      mintableAmount?.dataValues.poapsToBeMinted &&
+      mintableAmount?.dataValues.mintedPoaps
+    ) {
+      return {
+        poapsToBeMinted: mintableAmount?.dataValues.poapsToBeMinted,
+        mintedPoaps: mintableAmount?.dataValues.mintedPoaps,
+      };
+    } 
+    // else {
+    //   return
+    // }
   } catch (error) {
     console.log("Error: ", error);
   }
