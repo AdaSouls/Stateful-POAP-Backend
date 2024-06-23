@@ -7,7 +7,8 @@ import * as consensual from "../util/smartContracts/consensualContractInteractio
 import dotenv from "dotenv";
 import path from "path";
 import { PoapType } from "../common/enums";
-import { IEvent } from "../common/interfaces";
+import { IEvent, IIssuer } from "../common/interfaces";
+import { UUID } from "crypto";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
@@ -46,9 +47,11 @@ export const getEventByAddress = async (address: string) => {
   }
 };
 
-export const getEventByPK = async (eventId: string) => {
+export const getEventByPK = async (eventUuid: string) => {
   try {
-    const event = await Event.findByPk(eventId, { include: { model: Issuer } });
+    const event = await Event.findByPk(eventUuid, {
+      include: { model: Issuer },
+    });
     return event;
   } catch (error) {
     console.log("Error: ", error);
@@ -56,11 +59,11 @@ export const getEventByPK = async (eventId: string) => {
 };
 
 export const getEventMintableAmount = async (
-  eventId: string
-): Promise<{ poapsToBeMinted: number; mintedPoaps: number }| undefined> => {
+  eventUuid: string
+): Promise<{ poapsToBeMinted: number; mintedPoaps: number } | undefined> => {
   try {
     const mintableAmount = await Event.findOne({
-      where: { eventId },
+      where: { eventUuid },
       attributes: [eventTable.poapsToBeMinted, eventTable.mintedPoaps],
     });
     if (
@@ -71,24 +74,21 @@ export const getEventMintableAmount = async (
         poapsToBeMinted: mintableAmount?.dataValues.poapsToBeMinted,
         mintedPoaps: mintableAmount?.dataValues.mintedPoaps,
       };
-    } 
-    // else {
-    //   return
-    // }
+    }
   } catch (error) {
     console.log("Error: ", error);
   }
 };
 
 export const updateMintedPoapsAmount = async (
-  eventId: string,
+  eventUuid: string,
   newAmount: number
 ) => {
   try {
     const event = await Event.update(
       { mintedPoaps: newAmount },
       {
-        where: { eventId },
+        where: { eventUuid },
       }
     );
     return event;
@@ -97,10 +97,10 @@ export const updateMintedPoapsAmount = async (
   }
 };
 
-export const getEventContractType = async (eventId: string) => {
+export const getEventContractType = async (eventUuid: string) => {
   try {
     const event = await Event.findOne({
-      where: { eventId },
+      where: { eventUuid },
       attributes: [eventTable.poapType],
     });
     return event?.dataValues.poapType;
@@ -109,16 +109,20 @@ export const getEventContractType = async (eventId: string) => {
   }
 };
 
-export const createEvent = async (event: IEvent, issuerId: string) => {
-  const eventId = crypto.randomUUID();
-  const eventInfo = { ...event, issuerId, eventId };
-  console.log("🚀 ~ createEvent ~ eventInfo.expiryDate:", eventInfo.expiryDate);
-  const timestamp = Math.floor(
-    eventInfo.expiryDate
-      ? eventInfo.expiryDate.getDate() / 1000
-      : Date.now() / 1000 + 86400 * 365 * 99
-  );
-  if (!issuerId) {
+export const createEvent = async (event: IEvent, issuerUuid: UUID) => {
+  console.log("🚀 ~ createEvent ~ issuerUuid:", issuerUuid);
+  console.log("🚀 ~ createEvent ~ event:", event);
+  const eventUuid = crypto.randomUUID();
+  const eventInfo = { ...event, issuerUuid: issuerUuid, eventUuid };
+  let milliseconds;
+  if (eventInfo.expiryDate) {
+    const date = new Date(eventInfo.expiryDate);
+    milliseconds = date.getTime();
+  } else {
+    milliseconds = Date.now() / 1000 + 86400 * 365 * 99;
+  }
+  const timestamp = Math.floor(milliseconds / 1000);
+  if (!issuerUuid) {
     console.log("Error: Owner not found");
     return;
   }
@@ -154,10 +158,11 @@ export const createEvent = async (event: IEvent, issuerId: string) => {
     //   return;
     // }
 
-    const event = await Event.create(eventInfo);
+    const event = await Event.create(eventInfo, {include: {model: Issuer}});
+    // const event = await Event.create(eventInfo, { include: { model: Issuer } });
 
     return event;
   } catch (error) {
     console.log("Error: ", error);
   }
-};
+}

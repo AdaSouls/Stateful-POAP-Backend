@@ -1,15 +1,13 @@
-import {
-  Model,
-  DataTypes
-} from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database/connection";
 
 export default class Owner extends Model {}
 
 Owner.init(
   {
-    uuid: {
-      type: DataTypes.STRING,
+    ownerUuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
       primaryKey: true,
@@ -27,7 +25,7 @@ Owner.init(
   },
   {
     tableName: "owners",
-    sequelize
+    sequelize,
     // schema: config.postgresql.schema,
     // indexes: [
     //   {

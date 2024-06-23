@@ -5,6 +5,7 @@ import * as issuerService from "../service/issuers.service";
 import { IEvent, IIssuer, IOwner } from "../common/interfaces";
 import pagination from "../util/pagination";
 import Owner from "../model/Owner";
+import { UUID } from "crypto";
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ export const getAllEvents = catchAsync(async (req, res) => {
     res.send(events);
   } catch (error) {
     console.log("Error: ", error);
+    res.status(400).send({ message: "Events could not be found" });
   }
 });
 
@@ -50,6 +52,7 @@ export const getAllEventsByIssuersAddress = catchAsync(async (req, res) => {
     res.send(events);
   } catch (error) {
     console.log("Error: ", error);
+    res.status(400).send({ message: "Events could not be found" });
   }
 });
 
@@ -57,15 +60,16 @@ export const getAllEventsByIssuersAddress = catchAsync(async (req, res) => {
  * Get all Event records by primary key.
  */
 export const getEventByPK = catchAsync(async (req, res) => {
-  const { eventId } = req.query;
-  if (typeof eventId !== "string") {
+  const { eventUuid } = req.query;
+  if (typeof eventUuid !== "string") {
     return res.status(400).send({ message: "EventId must be a string" });
   }
   try {
-    const events = await eventService.getEventByPK(eventId);
+    const events = await eventService.getEventByPK(eventUuid);
     res.send(events);
   } catch (error) {
     console.log("Error: ", error);
+    res.status(400).send({ message: "Event could not be found" });
   }
 });
 
@@ -76,34 +80,33 @@ export const createEvent = catchAsync(async (req, res) => {
   const info = { ...req.body };
   const event: IEvent = { ...info.event };
   // const owner: IOwner = info.owner;
-  const issuer: IIssuer = info.issuer;
+  const issuerUuid: UUID = info.issuerUuid;
   if (!event) {
     return res
       .status(400)
       .send({ message: "Event cannot be empty or with empty information" });
   }
-  if (!issuer) {
+  if (!issuerUuid) {
     return res
       .status(400)
       .send({ message: "Issuer cannot be empty or with empty information" });
   }
+  // let returnedOwner;
   try {
-    // let returnedOwner;
-    let issuerCreated;
-    if (!issuer.uuid) {
-      console.log("Adentro de !issuer.uuid");
-      issuerCreated = await issuerService.createNewIssuer(
-        issuer.address,
-        issuer.email,
-        issuer.organization,
-        issuer.name
-      );
-    }
-    if (issuer.uuid) {
-      const eventCreated = await eventService.createEvent(event, issuer.uuid);
-      res.send(eventCreated);
+    if (issuerUuid) {
+      console.log("Adentro de issuerUuid")
+      const eventCreated = await eventService.createEvent(event, issuerUuid);
+      if (!eventCreated) {
+        return res
+          .status(400)
+          .send({ message: "Event could not be created" });
+      }
+      res.status(201).send(eventCreated);
     }
   } catch (error) {
     console.log("Error: ", error);
+    res
+      .status(400)
+      .send({ message: "Event could not be created" });
   }
 });

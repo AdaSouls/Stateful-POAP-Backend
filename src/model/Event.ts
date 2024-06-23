@@ -1,15 +1,19 @@
-import {
-  Model,
-  DataTypes,
-} from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database/connection";
+import Poap from "./Poap";
 
-export default class Event extends Model {}
+export default class Event extends Model {
+  public addPoaps!: (poap: Poap | number) => Promise<void>;
+  public getPoaps!: () => Promise<Poap[]>;
+  public setPoaps!: (poaps: Poap[] | number[]) => Promise<void>;
+  public removePoap!: (poap: Poap | number) => Promise<void>;
+}
 
 Event.init(
   {
-    eventId: {
-      type: DataTypes.STRING,
+    eventUuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
       primaryKey: true,
@@ -117,13 +121,6 @@ Event.init(
   },
   {
     tableName: "events",
-    sequelize
-    // schema: config.postgresql.schema,
-    // indexes: [
-    //   {
-    //     unique: true,
-    //     fields: ["address"],
-    //   },
-    // ],
+    sequelize,
   }
 );

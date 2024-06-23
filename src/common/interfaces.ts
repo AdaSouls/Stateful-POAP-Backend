@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import { EventType, PoapType } from "./enums";
 
 export interface IEvent {
@@ -26,10 +27,11 @@ export interface IEvent {
   poapsToBeMinted: number;
   mintedPoaps: number;
   idInContract: number;
+  eventUuid?: UUID;
 }
 
 export interface IOwner {
-  uuid?: string;
+  ownerUuid?: UUID;
   address: string;
   email: string;
   createdAt?: Date;
@@ -37,11 +39,18 @@ export interface IOwner {
 }
 
 export interface IIssuer {
-  uuid?: string;
+  issuerUuid?: UUID;
   address: string;
   email: string;
   name: string;
   organization: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IPoap {
+  poapUuid?: UUID;
+  instance: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

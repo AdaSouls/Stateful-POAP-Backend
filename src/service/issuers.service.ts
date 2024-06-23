@@ -27,9 +27,9 @@ export const getIssuerByEmail = async (email: string) => {
   }
 };
 
-export const getIssuerByPK = async (uuid: string) => {
+export const getIssuerByPK = async (issuerUuid: string) => {
   try {
-    const issuer = await Issuer.findByPk(uuid);
+    const issuer = await Issuer.findByPk(issuerUuid);
     return issuer;
   } catch (error) {
     console.log("Error: ", error);
@@ -38,11 +38,9 @@ export const getIssuerByPK = async (uuid: string) => {
 
 export const createNewIssuer = async (address: string, email: string, organization: string, name: string) => {
   try {
-    if (!address && !email && !organization && !name) {
-      return { message: "Address, email, name and organization are required" };
-    }
-    const uuid = crypto.randomUUID();
-    const issuer = await Issuer.create({ uuid, address, email, organization });
+    const issuerUuid = crypto.randomUUID();
+    const issuerData = { issuerUuid, address, email, organization, name }
+    const issuer = await Issuer.create(issuerData);
     console.log("🚀 ~ createNewIssuer ~ issuer:", issuer);
     return issuer;
   } catch (error) {
@@ -50,17 +48,17 @@ export const createNewIssuer = async (address: string, email: string, organizati
   }
 };
 
-export const updateIssuersEmail = async (uuid: string, email: string) => {
+export const updateIssuersEmail = async (issuerUuid: string, email: string) => {
   try {
-    const issuer = await Issuer.update({ email }, { where: { uuid } });
+    const issuer = await Issuer.update({ email }, { where: { issuerUuid } });
     return issuer;
   } catch (error) {
     console.log("Error: ", error);
   }
 };
-export const updateIssuersAddress = async (uuid: string, address: string) => {
+export const updateIssuersAddress = async (issuerUuid: string, address: string) => {
   try {
-    const issuer = await Issuer.update({ address }, { where: { uuid } });
+    const issuer = await Issuer.update({ address }, { where: { issuerUuid } });
     return issuer;
   } catch (error) {
     console.log("Error: ", error);

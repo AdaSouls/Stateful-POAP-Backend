@@ -5,8 +5,9 @@ export default class Issuer extends Model {}
 
 Issuer.init(
   {
-    uuid: {
-      type: DataTypes.STRING,
+    issuerUuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
       primaryKey: true,
