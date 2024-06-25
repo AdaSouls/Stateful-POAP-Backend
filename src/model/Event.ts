@@ -1,13 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database/connection";
-import Poap from "./Poap";
 
-export default class Event extends Model {
-  public addPoaps!: (poap: Poap | number) => Promise<void>;
-  public getPoaps!: () => Promise<Poap[]>;
-  public setPoaps!: (poaps: Poap[] | number[]) => Promise<void>;
-  public removePoap!: (poap: Poap | number) => Promise<void>;
-}
+export default class Event extends Model {}
 
 Event.init(
   {

@@ -1,6 +1,8 @@
 import catchAsync from "../util/catchAsync";
 import * as poapService from "../service/poaps.service";
 import pagination from "../util/pagination";
+import { Owner } from "../model";
+import { UUID } from "crypto";
 
 /*
 |--------------------------------------------------------------------------
@@ -92,10 +94,18 @@ export const getPoapsState = catchAsync(async (req, res) => {});
  */
 export const mintPoap = catchAsync(async (req, res) => {
   const { ownerUuid, eventUuid } = req.body;
+  // const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  // if (!uuidRegex.test(ownerUuid) || uuidRegex.test(eventUuid)) {
+  //   res.status(400).send({message: "Invalid UUID"})
+  // }
   if (!ownerUuid) {
     res.status(400).send({message: "Owner's information is needed"})
   }
   try {
+    const owner = await Owner.findByPk(ownerUuid);
+    if (!owner) {
+      res.status(400).send({message: "Owner not found"})
+    }
     const poap = await poapService.mintPoap(ownerUuid, eventUuid);
     if (!poap) {
       res.status(400).send({message: "Poap couldn't be minted"})
@@ -109,19 +119,6 @@ export const mintPoap = catchAsync(async (req, res) => {
     res.status(400).send({message: "Poap couldn't be minted"})
   }
 });
-
-/**
- * Update Poap's metadata.
- */
-export const updatePoapMetadata = catchAsync(async (req, res) => {
-  const { poapUuid, eventUuid } = req.body
-  try {
-    const updatedPoap = await poapService.updatePoapMetadata(poapUuid, eventUuid);
-    res.send(updatedPoap);
-  } catch (error) {
-    console.log("Error: ", error);
-  }
-})
 
 /**
  * Update Poap's event relation.

@@ -4,7 +4,17 @@ import { ethers } from "ethers";
 const abiEncoder = new ethers.AbiCoder();
 
 const getTimestamp = (date: Date) => {
-  return date.getTime() / 1000;
+  const newDate = new Date(date);
+  const timestamp = newDate.getTime() / 1000;
+  return timestamp;
+};
+
+const hashString = (input: string): string => {
+  // Hash the string using SHA-256
+
+  const hashedString = ethers.keccak256(input);
+
+  return hashedString;
 };
 
 export const encodeStatus = (poapStatus: IEvent[]) => {
@@ -24,16 +34,24 @@ export const encodeStatus = (poapStatus: IEvent[]) => {
     ],
     [data]
   );
-  return encodedStatus;
+  const encodedInBytes32 = hashString(encodedStatus);
+  return encodedInBytes32;
 };
 
 export const decodeStatus = (status: string) => {
+  console.log("🚀 ~ decodeStatus ~ status:", status);
+  const decodedBytesToString = ethers.decodeBytes32String(status);
+  console.log(
+    "🚀 ~ decodeStatus ~ decodedBytesToString:",
+    decodedBytesToString
+  );
   const decodedStatus = abiEncoder.decode(
     [
       "tuple(string title,string description,string city,string country,uint256 startDate,uint256 endDate,uint256 expiryDate,uint256 year,string eventUrl,bool virtualEvent,string image,uint256 secretCode,uint256 eventTemplateId,string email,uint256 requestedCodes,bool privateEvent,string purpose,string platform,string eventType,uint256 amountOfAttendees,string account,string poapType,uint256 poapsToBeMinted,uint256 mintedPoaps,uint256 idInContract)[]",
     ],
-    status
+    decodedBytesToString
   );
+  console.log("🚀 ~ decodeStatus ~ decodedStatus:", decodedStatus);
 
   const decodedArray = decodedStatus[0].map((inputArray: any) => ({
     title: inputArray[0] as string,
@@ -60,7 +78,7 @@ export const decodeStatus = (status: string) => {
     poapType: inputArray[21] as string,
     poapsToBeMinted: Number(inputArray[22]),
     mintedPoaps: Number(inputArray[23]),
-    idInContract: Number(inputArray[24])
+    idInContract: Number(inputArray[24]),
   }));
   return decodedArray;
 };

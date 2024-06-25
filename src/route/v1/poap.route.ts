@@ -10,6 +10,5 @@ poapRouter.get("/getAllByEvent", poapController.getAllPoapsByEvent)
 poapRouter.get("/getState", poapController.getPoapsState)
 poapRouter.post("/mintPoap", poapController.mintPoap)
 poapRouter.post("/addEventToPoap", poapController.addEventToPoap)
-poapRouter.patch("/updateMetadata", poapController.updatePoapMetadata)
 
 export default poapRouter

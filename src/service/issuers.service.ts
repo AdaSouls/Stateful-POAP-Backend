@@ -1,3 +1,4 @@
+import { FindAttributeOptions } from "sequelize";
 import { Issuer } from "../model";
 
 export const getAllIssuers = async (offset: number, limit: number) => {
@@ -27,9 +28,9 @@ export const getIssuerByEmail = async (email: string) => {
   }
 };
 
-export const getIssuerByPK = async (issuerUuid: string) => {
+export const getIssuerByPK = async (issuerUuid: string, options?: FindAttributeOptions | undefined) => {
   try {
-    const issuer = await Issuer.findByPk(issuerUuid);
+    const issuer = await Issuer.findByPk(issuerUuid, { attributes : options});
     return issuer;
   } catch (error) {
     console.log("Error: ", error);

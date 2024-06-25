@@ -41,18 +41,33 @@ let wallet = new ethers.Wallet(accountFrom.privateKey, provider);
 
 const poap = new ethers.Contract(poapContractAddress, poapContractAbi, wallet);
 
+
+/**
+ *  
+ * @param issuerId
+ * @param eventId
+ * @param maxSupply
+ * @param mintExpiration
+ * @param eventOrganizer
+ * @param eventData
+ * 
+ */
 export const createEventId = async (
+  issuerId: number,
   eventId: number,
   maxSupply: number,
   mintExpiration: number,
-  eventOrganizer: string
+  eventOrganizer: string,
+  eventData: string
 ) => {
   try {
     const createReceipt = await poap.createEventId(
+      issuerId,
       eventId,
       maxSupply,
       mintExpiration,
-      eventOrganizer
+      eventOrganizer,
+      eventData
     );
     const receipt = await createReceipt.wait();
     console.log("Transaction submitted:", createReceipt);
@@ -100,12 +115,13 @@ export const isAdmin = async (address: string) => {
 };
 
 export const mintToken = async (
+  issuerId: number,
   eventId: number,
   to: string,
   initialData: string
 ) => {
   try {
-    const txResponse = await poap.mintToken(eventId, to, initialData);
+    const txResponse = await poap.mintToken(issuerId, eventId, to, initialData);
     console.log("mintToken Transaction response:", txResponse);
     return txResponse;
   } catch (error) {

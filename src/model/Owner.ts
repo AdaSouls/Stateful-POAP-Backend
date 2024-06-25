@@ -26,12 +26,5 @@ Owner.init(
   {
     tableName: "owners",
     sequelize,
-    // schema: config.postgresql.schema,
-    // indexes: [
-    //   {
-    //     unique: true,
-    //     fields: ["address"],
-    //   },
-    // ],
   }
 );

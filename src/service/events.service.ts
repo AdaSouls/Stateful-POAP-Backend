@@ -62,6 +62,7 @@ export const getEventMintableAmount = async (
   eventUuid: string
 ): Promise<{ poapsToBeMinted: number; mintedPoaps: number } | undefined> => {
   try {
+    console.log("🚀 ~ [eventTable.poapsToBeMinted, eventTable.mintedPoaps]:", [eventTable.poapsToBeMinted, eventTable.mintedPoaps])
     const mintableAmount = await Event.findOne({
       where: { eventUuid },
       attributes: [eventTable.poapsToBeMinted, eventTable.mintedPoaps],
@@ -109,11 +110,16 @@ export const getEventContractType = async (eventUuid: string) => {
   }
 };
 
-export const createEvent = async (event: IEvent, issuerUuid: UUID) => {
+export const createEvent = async (event: IEvent, issuerUuid: UUID, issuerIdInContract: number, hashedInfo: string) => {
+  console.log("🚀 ~ createEvent ~ issuerIdInContract:", issuerIdInContract)
   console.log("🚀 ~ createEvent ~ issuerUuid:", issuerUuid);
   console.log("🚀 ~ createEvent ~ event:", event);
   const eventUuid = crypto.randomUUID();
-  const eventInfo = { ...event, issuerUuid: issuerUuid, eventUuid };
+  if (!issuerUuid) {
+    console.log("Error: Issuer not found");
+    return;
+  }
+  const eventInfo = { ...event, issuerUuid, eventUuid };
   let milliseconds;
   if (eventInfo.expiryDate) {
     const date = new Date(eventInfo.expiryDate);
@@ -122,17 +128,17 @@ export const createEvent = async (event: IEvent, issuerUuid: UUID) => {
     milliseconds = Date.now() / 1000 + 86400 * 365 * 99;
   }
   const timestamp = Math.floor(milliseconds / 1000);
-  if (!issuerUuid) {
-    console.log("Error: Owner not found");
-    return;
-  }
   try {
     if (eventInfo.poapType === PoapType.Poap) {
+      console.log("🚀 ~ createEvent ~ eventInfo.poapType === PoapType.Poap:", eventInfo.poapType === PoapType.Poap)
       const eventCreated = await poap.createEventId(
+        issuerIdInContract,
         eventInfo.idInContract,
         eventInfo.poapsToBeMinted,
         timestamp,
-        HH_ACCOUNT_0 as string
+        HH_ACCOUNT_0 as string,
+        hashedInfo
+        
       );
       console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
     }

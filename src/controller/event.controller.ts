@@ -6,6 +6,7 @@ import { IEvent, IIssuer, IOwner } from "../common/interfaces";
 import pagination from "../util/pagination";
 import Owner from "../model/Owner";
 import { UUID } from "crypto";
+import { encodeStatus } from "../util/smartContracts/statusEncoder";
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +80,6 @@ export const getEventByPK = catchAsync(async (req, res) => {
 export const createEvent = catchAsync(async (req, res) => {
   const info = { ...req.body };
   const event: IEvent = { ...info.event };
-  // const owner: IOwner = info.owner;
   const issuerUuid: UUID = info.issuerUuid;
   if (!event) {
     return res
@@ -91,11 +91,19 @@ export const createEvent = catchAsync(async (req, res) => {
       .status(400)
       .send({ message: "Issuer cannot be empty or with empty information" });
   }
-  // let returnedOwner;
+  const hashedInfo = encodeStatus([event]);
+
   try {
     if (issuerUuid) {
       console.log("Adentro de issuerUuid")
-      const eventCreated = await eventService.createEvent(event, issuerUuid);
+      const issuer = await issuerService.getIssuerByPK(issuerUuid);
+      console.log("🚀 ~ createEvent ~ issuer:", issuer)
+      if (!issuer) {
+        return res
+          .status(400)
+          .send({ message: "Issuer could not be found" });
+      }
+      const eventCreated = await eventService.createEvent(event, issuerUuid, issuer?.dataValues.issuerIdInContract, hashedInfo);
       if (!eventCreated) {
         return res
           .status(400)

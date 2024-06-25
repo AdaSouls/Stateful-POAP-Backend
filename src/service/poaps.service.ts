@@ -5,8 +5,6 @@ import * as eventService from "./events.service";
 import * as eventPoapService from "./eventPoaps.service";
 import { mintToken } from "../util/smartContracts/poapContractInteractions";
 import { encodeStatus } from "../util/smartContracts/statusEncoder";
-import { sequelize } from "../database/connection";
-import { QueryTypes } from "sequelize";
 import { UUID } from "crypto";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
@@ -60,43 +58,39 @@ export const getPoapByPK = async (address: string) => {
 
 export const mintPoap = async (ownerUuid: UUID, eventUuid: UUID) => {
   const poapUuid = crypto.randomUUID();
-  const mintableAmount = await eventService.getEventMintableAmount(eventUuid);
   const event = await eventService.getEventByPK(eventUuid);
   let mintInfo;
-  if (mintableAmount) {
+  if (event) {
     mintInfo = {
       ownerUuid,
       eventUuid,
       poapUuid,
-      instance: mintableAmount?.mintedPoaps + 1,
+      instance: event?.dataValues.mintedPoaps + 1,
     };
   }
   const hashedInfo = encodeStatus([event?.dataValues]);
   try {
     const mintedTokenToBlockchain = await mintToken(
+      event?.dataValues.Issuer.dataValues.issuerIdInContract as number,
       event?.dataValues.idInContract as number,
       HH_ACCOUNT_1 as string,
       hashedInfo
     );
-    console.log(
-      "🚀 ~ mintPoap ~ mintedTokenToBlockchain:",
-      mintedTokenToBlockchain
-    );
-    const owner = await Owner.findByPk(ownerUuid);
-    if (!owner) {
-      return;
-    }
+
     if (
-      mintableAmount &&
-      mintableAmount.poapsToBeMinted - mintableAmount.mintedPoaps > 0 &&
-      event
+      event &&
+      event.dataValues.poapsToBeMinted - event.dataValues.mintedPoaps > 0
     ) {
       const poap = await Poap.create(mintInfo);
-      const relation = await eventPoapService.addRelation(poapUuid, eventUuid);
-      console.log("🚀 ~ mintPoap ~ relation:", relation);
+      if (poap) {
+        const relation = await eventPoapService.addRelation(
+          poapUuid,
+          eventUuid
+        );
+      }
 
       const updatedMintedAmount = await Event.update(
-        { mintedPoaps: mintableAmount.mintedPoaps + 1 },
+        { mintedPoaps: event.dataValues.mintedPoaps + 1 },
         { where: { eventUuid } }
       );
       return poap;
@@ -108,34 +102,9 @@ export const mintPoap = async (ownerUuid: UUID, eventUuid: UUID) => {
   }
 };
 
-export const updatePoapMetadata = async (
-  poapUuid: UUID,
-  eventUuid: UUID
-) => {
-  // Option 1
-  // Get metadata from blockchain/paima (correct way)
-
-  // Option 2
-  // Get metadata from DB
-  try {
-    const poap = await Poap.findByPk(poapUuid, {
-      include: { model: Event },
-    });
-    console.log("🚀 ~ updatePoapMetadata ~ poap:", poap);
-    // const metadata = poap?.dataValues.metadata;
-    // const newEvent = await eventService.getEventByPK(eventUuid);
-    // const newMetadata = [...metadata, newEvent?.dataValues];
-    // const updatedPoap = await Poap.update(
-    //   { metadata: newMetadata },
-    //   { where: { uuid: poapUuid } }
-    // );
-    // return updatedPoap;
-  } catch (error) {
-    console.log("Error: ", error);
-  }
-};
 
 export const addEventToPoap = async (poapUuid: UUID, eventUuid: UUID) => {
+  // Add hashed data to paima
   try {
     const poap = await Poap.findByPk(poapUuid);
     const event = await Event.findByPk(eventUuid);

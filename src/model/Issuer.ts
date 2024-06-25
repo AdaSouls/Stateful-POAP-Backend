@@ -12,6 +12,12 @@ Issuer.init(
       unique: true,
       primaryKey: true,
     },
+    issuerIdInContract: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      unique: true,
+    },
     address: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -32,12 +38,5 @@ Issuer.init(
   {
     tableName: "issuers",
     sequelize,
-    // schema: config.postgresql.schema,
-    // indexes: [
-    //   {
-    //     unique: true,
-    //     fields: ["address"],
-    //   },
-    // ],
   }
 );
