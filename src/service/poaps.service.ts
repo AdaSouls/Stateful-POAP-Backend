@@ -102,7 +102,6 @@ export const mintPoap = async (ownerUuid: UUID, eventUuid: UUID) => {
   }
 };
 
-
 export const addEventToPoap = async (poapUuid: UUID, eventUuid: UUID) => {
   // Add hashed data to paima
   try {

@@ -13,13 +13,21 @@ import { ethers } from "ethers";
  * Get all Owners.
  */
 export const getAllOwners = catchAsync(async (req, res) => {
-  const {page, limit} = req.query;
+  const { page, limit } = req.query;
   let paginationOffset, paginationLimit;
   if (typeof page === "string" && typeof limit === "string") {
-    ({paginationOffset, paginationLimit} = pagination(parseInt(page), parseInt(limit)));
-  } else { ({paginationOffset, paginationLimit} = pagination())} 
+    ({ paginationOffset, paginationLimit } = pagination(
+      parseInt(page),
+      parseInt(limit)
+    ));
+  } else {
+    ({ paginationOffset, paginationLimit } = pagination());
+  }
   try {
-    const owners = await ownerService.getAllOwners(paginationOffset, paginationLimit);
+    const owners = await ownerService.getAllOwners(
+      paginationOffset,
+      paginationLimit
+    );
     res.send(owners);
   } catch (error) {
     console.log("Error: ", error);
@@ -101,16 +109,21 @@ export const createNewOwner = catchAsync(async (req, res) => {
 export const updateOwner = catchAsync(async (req, res) => {
   const { address, email, ownerUuid } = req.body;
   const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  if(!ownerUuid) return res.status(400).send({ message: "Owner's UUID is required" });
+  if (!ownerUuid)
+    return res.status(400).send({ message: "Owner's UUID is required" });
   try {
     if (address) {
-      const owner = await ownerService.updateOwnersAddress(ownerUuid, address)
-      if (owner && owner[0] === 1) {return res.send({ message: "Owner's address updated successfully" }) }
+      const owner = await ownerService.updateOwnersAddress(ownerUuid, address);
+      if (owner && owner[0] === 1) {
+        return res.send({ message: "Owner's address updated successfully" });
+      }
       return res.status(400).send({ message: "Owner's address not updated" });
     }
     if (emailRegex.test(email)) {
-      const owner = await ownerService.updateOwnersEmail(ownerUuid, email)
-      if (owner && owner[0] === 1) {return res.send({ message: "Owner's email updated successfully" }) }
+      const owner = await ownerService.updateOwnersEmail(ownerUuid, email);
+      if (owner && owner[0] === 1) {
+        return res.send({ message: "Owner's email updated successfully" });
+      }
       return res.status(400).send({ message: "Owner's email not updated" });
     } else {
       res.status(400).send({ message: "Invalid email/address" });
@@ -119,4 +132,3 @@ export const updateOwner = catchAsync(async (req, res) => {
     console.log("Error: ", error);
   }
 });
-

@@ -18,7 +18,7 @@ if (POSTGRESQL_URL) {
     // logging: console.log,
     native: false,
     dialectOptions: {
-      ssl: false
+      ssl: false,
       // ssl: {
       //   require: false,
       //   rejectUnauthorized: false,

@@ -1,10 +1,9 @@
-import express, {Application} from "express";
+import express, { Application } from "express";
 import { Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import cors from "cors";
 import compression from "compression";
-// import xss from "xss-clean";
 import httpStatus from "http-status";
 import { config } from "./config/config";
 import * as morgan from "./config/morgan";
@@ -12,6 +11,8 @@ import router from "./route/v1";
 import { checkDown } from "./middleware/down";
 import { errorConverter, errorHandler } from "./middleware/error";
 import { ApiError } from "./util/ApiError";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./config/swagger.json";
 
 const app = express();
 

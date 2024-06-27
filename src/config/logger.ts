@@ -1,5 +1,5 @@
-import winston from 'winston';
-import {config} from "./config";
+import winston from "winston";
+import { config } from "./config";
 
 const format = winston.format;
 
@@ -11,18 +11,18 @@ const enumerateErrorFormat = winston.format((info) => {
 });
 
 export const logger = winston.createLogger({
-  level: config.env !== 'production' ? 'debug' : 'info',
+  level: config.env !== "production" ? "debug" : "info",
   format: format.combine(
     enumerateErrorFormat(),
-    config.env !== 'production' ? format.colorize() : format.uncolorize(),
+    config.env !== "production" ? format.colorize() : format.uncolorize(),
     format.splat(),
     format.timestamp(),
     format.errors({ stack: true }),
-    format.printf(({ level, message }) => `${level}: ${message}`),
+    format.printf(({ level, message }) => `${level}: ${message}`)
   ),
   transports: [
     new winston.transports.Console({
-      stderrLevels: ['error'],
+      stderrLevels: ["error"],
     }),
     new winston.transports.File({
       // stderrLevels: ['error'],
@@ -32,7 +32,7 @@ export const logger = winston.createLogger({
   ],
   rejectionHandlers: [
     new winston.transports.Console({
-      stderrLevels: ['error'],
+      stderrLevels: ["error"],
     }),
     new winston.transports.File({
       // stderrLevels: ['error'],

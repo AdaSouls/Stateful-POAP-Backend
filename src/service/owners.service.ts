@@ -57,7 +57,10 @@ export const updateOwnersEmail = async (ownerUuid: string, email: string) => {
     console.log("Error: ", error);
   }
 };
-export const updateOwnersAddress = async (ownerUuid: string, address: string) => {
+export const updateOwnersAddress = async (
+  ownerUuid: string,
+  address: string
+) => {
   try {
     const owner = await Owner.update({ address }, { where: { ownerUuid } });
     return owner;

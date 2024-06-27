@@ -95,26 +95,25 @@ export const createEvent = catchAsync(async (req, res) => {
 
   try {
     if (issuerUuid) {
-      console.log("Adentro de issuerUuid")
+      console.log("Adentro de issuerUuid");
       const issuer = await issuerService.getIssuerByPK(issuerUuid);
-      console.log("🚀 ~ createEvent ~ issuer:", issuer)
+      console.log("🚀 ~ createEvent ~ issuer:", issuer);
       if (!issuer) {
-        return res
-          .status(400)
-          .send({ message: "Issuer could not be found" });
+        return res.status(400).send({ message: "Issuer could not be found" });
       }
-      const eventCreated = await eventService.createEvent(event, issuerUuid, issuer?.dataValues.issuerIdInContract, hashedInfo);
+      const eventCreated = await eventService.createEvent(
+        event,
+        issuerUuid,
+        issuer?.dataValues.issuerIdInContract,
+        hashedInfo
+      );
       if (!eventCreated) {
-        return res
-          .status(400)
-          .send({ message: "Event could not be created" });
+        return res.status(400).send({ message: "Event could not be created" });
       }
       res.status(201).send(eventCreated);
     }
   } catch (error) {
     console.log("Error: ", error);
-    res
-      .status(400)
-      .send({ message: "Event could not be created" });
+    res.status(400).send({ message: "Event could not be created" });
   }
 });

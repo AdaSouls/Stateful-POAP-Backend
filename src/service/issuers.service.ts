@@ -28,19 +28,27 @@ export const getIssuerByEmail = async (email: string) => {
   }
 };
 
-export const getIssuerByPK = async (issuerUuid: string, options?: FindAttributeOptions | undefined) => {
+export const getIssuerByPK = async (
+  issuerUuid: string,
+  options?: FindAttributeOptions | undefined
+) => {
   try {
-    const issuer = await Issuer.findByPk(issuerUuid, { attributes : options});
+    const issuer = await Issuer.findByPk(issuerUuid, { attributes: options });
     return issuer;
   } catch (error) {
     console.log("Error: ", error);
   }
 };
 
-export const createNewIssuer = async (address: string, email: string, organization: string, name: string) => {
+export const createNewIssuer = async (
+  address: string,
+  email: string,
+  organization: string,
+  name: string
+) => {
   try {
     const issuerUuid = crypto.randomUUID();
-    const issuerData = { issuerUuid, address, email, organization, name }
+    const issuerData = { issuerUuid, address, email, organization, name };
     const issuer = await Issuer.create(issuerData);
     console.log("🚀 ~ createNewIssuer ~ issuer:", issuer);
     return issuer;
@@ -57,7 +65,10 @@ export const updateIssuersEmail = async (issuerUuid: string, email: string) => {
     console.log("Error: ", error);
   }
 };
-export const updateIssuersAddress = async (issuerUuid: string, address: string) => {
+export const updateIssuersAddress = async (
+  issuerUuid: string,
+  address: string
+) => {
   try {
     const issuer = await Issuer.update({ address }, { where: { issuerUuid } });
     return issuer;

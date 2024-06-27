@@ -5,7 +5,7 @@ import * as eventService from "./events.service";
 import { mintToken } from "../util/smartContracts/poapContractInteractions";
 import { encodeStatus } from "../util/smartContracts/statusEncoder";
 import { sequelize } from "../database/connection";
-import { QueryTypes } from 'sequelize';
+import { QueryTypes } from "sequelize";
 import { UUID } from "crypto";
 
 export const getAllEventPoaps = async (offset: number, limit: number) => {
@@ -21,7 +21,7 @@ export const getAllEventPoaps = async (offset: number, limit: number) => {
 };
 
 export const addRelation = async (poapUuid: UUID, eventUuid: UUID) => {
-try {
+  try {
     const eventPoaps = await EventPoap.create({ poapUuid, eventUuid });
     return eventPoaps;
   } catch (error) {

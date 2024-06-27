@@ -62,7 +62,10 @@ export const getEventMintableAmount = async (
   eventUuid: string
 ): Promise<{ poapsToBeMinted: number; mintedPoaps: number } | undefined> => {
   try {
-    console.log("🚀 ~ [eventTable.poapsToBeMinted, eventTable.mintedPoaps]:", [eventTable.poapsToBeMinted, eventTable.mintedPoaps])
+    console.log("🚀 ~ [eventTable.poapsToBeMinted, eventTable.mintedPoaps]:", [
+      eventTable.poapsToBeMinted,
+      eventTable.mintedPoaps,
+    ]);
     const mintableAmount = await Event.findOne({
       where: { eventUuid },
       attributes: [eventTable.poapsToBeMinted, eventTable.mintedPoaps],
@@ -110,8 +113,13 @@ export const getEventContractType = async (eventUuid: string) => {
   }
 };
 
-export const createEvent = async (event: IEvent, issuerUuid: UUID, issuerIdInContract: number, hashedInfo: string) => {
-  console.log("🚀 ~ createEvent ~ issuerIdInContract:", issuerIdInContract)
+export const createEvent = async (
+  event: IEvent,
+  issuerUuid: UUID,
+  issuerIdInContract: number,
+  hashedInfo: string
+) => {
+  console.log("🚀 ~ createEvent ~ issuerIdInContract:", issuerIdInContract);
   console.log("🚀 ~ createEvent ~ issuerUuid:", issuerUuid);
   console.log("🚀 ~ createEvent ~ event:", event);
   const eventUuid = crypto.randomUUID();
@@ -130,7 +138,10 @@ export const createEvent = async (event: IEvent, issuerUuid: UUID, issuerIdInCon
   const timestamp = Math.floor(milliseconds / 1000);
   try {
     if (eventInfo.poapType === PoapType.Poap) {
-      console.log("🚀 ~ createEvent ~ eventInfo.poapType === PoapType.Poap:", eventInfo.poapType === PoapType.Poap)
+      console.log(
+        "🚀 ~ createEvent ~ eventInfo.poapType === PoapType.Poap:",
+        eventInfo.poapType === PoapType.Poap
+      );
       const eventCreated = await poap.createEventId(
         issuerIdInContract,
         eventInfo.idInContract,
@@ -138,7 +149,6 @@ export const createEvent = async (event: IEvent, issuerUuid: UUID, issuerIdInCon
         timestamp,
         HH_ACCOUNT_0 as string,
         hashedInfo
-        
       );
       console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
     }
@@ -164,11 +174,11 @@ export const createEvent = async (event: IEvent, issuerUuid: UUID, issuerIdInCon
     //   return;
     // }
 
-    const event = await Event.create(eventInfo, {include: {model: Issuer}});
+    const event = await Event.create(eventInfo, { include: { model: Issuer } });
     // const event = await Event.create(eventInfo, { include: { model: Issuer } });
 
     return event;
   } catch (error) {
     console.log("Error: ", error);
   }
-}
+};

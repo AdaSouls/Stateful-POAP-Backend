@@ -94,7 +94,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "artifacts/**/*.json"],
+  "include": ["src/**/*.ts", "artifacts/**/*.json", "src/**/*.json"],
   "exclude": [
     "node-modules",
     "jest.config.js",
