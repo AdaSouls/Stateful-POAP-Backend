@@ -77,7 +77,7 @@ Event.init(
       allowNull: false,
     },
     privateEvent: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
     purpose: {
