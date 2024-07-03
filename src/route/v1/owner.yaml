@@ -1,0 +1,17 @@
+components:
+  schemas:
+    Owner:
+      type: object
+      properties:
+        ownerUuid:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        email:
+          type: string
+          format: email
+          example: mail@example.com
+        address:
+          type: string
+          format: address
+          example: "0xdD2FD4581271e330360230F9337D5c0430Bf44C0"

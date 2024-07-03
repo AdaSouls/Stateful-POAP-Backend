@@ -1,0 +1,93 @@
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        eventUuid:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        idInContract:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Event title"
+        description:
+          type: string
+          example: "Event description"
+        city:
+          type: string
+          example: "Buenos Aires"
+        country:
+          type: string
+          example: "Argentina"
+        startDate:
+          type: string
+          format: date
+          example: "2022-01-01"
+        endDate:
+          type: string
+          format: date
+          example: "2022-01-02"
+        expiryDate:
+          type: string
+          format: date
+          example: "2022-01-03"
+        year:
+          type: integer
+          example: 2022
+        eventUrl:
+          type: string
+          example: "https://www.example.com"
+        virtualEvent:
+          type: boolean
+          example: true
+        image:
+          type: string
+          example: "https://www.example.com/image.jpg"
+        secretCode:
+          type: string
+          example: "secret"
+        eventTemplateId:
+          type: string
+          example: "template"
+        email:
+          type: string
+          format: email
+          example: mail@example.com
+        requestedCodes:
+          type: integer
+          example: 100
+        privateEvent:
+          type: boolean
+          example: false
+        purpose:
+          type: string
+          example: "Event purpose"
+        platform:
+          type: string
+          example: "Event platform"
+        eventType:
+          type: string
+          enum:
+            - "Virtual"
+            - "In-Person"
+            - "Both"
+          example: "Virtual"
+        amountOfAttendees:
+          type: integer
+          example: 100
+        poapType:
+          type: string
+          enum:
+            - "Poap"
+            - "Soulbound"
+            - "Consensual"
+          example: "Poap"
+        poapsToBeMinted:
+          type: integer
+          example: 100
+        mintedPoaps:
+          type: integer
+          example: 50
