@@ -1,7 +1,8 @@
 export const eventTable = {
   mintedPoaps: "mintedPoaps",
   poapsToBeMinted: "poapsToBeMinted",
-  eventId: "eventId",
+  eventUuid: "eventUuid",
+  idInContract: "idInContract",
   poapType: "poapType",
   account: "account",
   amountOfAttendees: "amountOfAttendees",
@@ -27,9 +28,18 @@ export const eventTable = {
 };
 
 export const ownerTable = {
-  uuid: "uuid",
+  ownerUuid: "ownerUuid",
   email: "email",
   address: "address",
 };
 
-export const poapTable = { uuid: "uuid", instance: "instance", poap: "poap" };
+export const poapTable = { poapUuid: "poapUuid", instance: "instance" };
+
+export const issuerTable = {
+  issuerUuid: "issuerUuid",
+  issuerIdInContract: "issuerIdInContract",
+  address: "address",
+  name: "name",
+  email: "email",
+  organization: "organization",
+};

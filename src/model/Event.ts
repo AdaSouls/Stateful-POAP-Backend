@@ -1,18 +1,20 @@
-import {
-  Model,
-  DataTypes,
-} from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database/connection";
 
 export default class Event extends Model {}
 
 Event.init(
   {
-    eventId: {
-      type: DataTypes.STRING,
+    eventUuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
       primaryKey: true,
+    },
+    idInContract: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     title: {
       type: DataTypes.STRING,
@@ -113,13 +115,6 @@ Event.init(
   },
   {
     tableName: "events",
-    sequelize
-    // schema: config.postgresql.schema,
-    // indexes: [
-    //   {
-    //     unique: true,
-    //     fields: ["address"],
-    //   },
-    // ],
+    sequelize,
   }
 );

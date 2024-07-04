@@ -1,6 +1,7 @@
 import catchAsync from "../util/catchAsync";
 import * as ownerService from "../service/owners.service";
 import pagination from "../util/pagination";
+import { ethers } from "ethers";
 
 /*
 |--------------------------------------------------------------------------
@@ -61,12 +62,12 @@ export const getOwnerByEmail = catchAsync(async (req, res) => {
  * Get Owner by primary key (UUID).
  */
 export const getOwnerByPK = catchAsync(async (req, res) => {
-  const { uuid } = req.query;
-  if (typeof uuid !== "string") {
+  const { ownerUuid } = req.query;
+  if (typeof ownerUuid !== "string") {
     return res.status(400).send({ message: "Uuid must be a string" });
   }
   try {
-    const owner = await ownerService.getOwnerByPK(uuid);
+    const owner = await ownerService.getOwnerByPK(ownerUuid);
     res.send(owner);
   } catch (error) {
     console.log("Error: ", error);
@@ -78,9 +79,15 @@ export const getOwnerByPK = catchAsync(async (req, res) => {
  */
 export const createNewOwner = catchAsync(async (req, res) => {
   const { address, email } = req.body;
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  if (typeof email === "string" && !emailRegex.test(email)) {
+    return res.status(400).send({ message: "Email must be valid" });
+  }
+  if (!ethers.isAddress(address)) {
+    return res.status(400).send({ message: "Invalid address" });
+  }
   try {
-    const owner = ownerService.createNewOwner(address, email);
-    console.log("🚀 ~ createNewOwner ~ owner:", owner)
+    const owner = await ownerService.createNewOwner(address, email);
     res.send(owner);
     return owner;
   } catch (error) {
@@ -92,17 +99,17 @@ export const createNewOwner = catchAsync(async (req, res) => {
  * Update Owner's address or email.
  */
 export const updateOwner = catchAsync(async (req, res) => {
-  const { address, email, uuid } = req.body;
+  const { address, email, ownerUuid } = req.body;
   const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  if(!uuid) return res.status(400).send({ message: "Owner's UUID is required" });
+  if(!ownerUuid) return res.status(400).send({ message: "Owner's UUID is required" });
   try {
     if (address) {
-      const owner = await ownerService.updateOwnersAddress(uuid, address)
+      const owner = await ownerService.updateOwnersAddress(ownerUuid, address)
       if (owner && owner[0] === 1) {return res.send({ message: "Owner's address updated successfully" }) }
       return res.status(400).send({ message: "Owner's address not updated" });
     }
     if (emailRegex.test(email)) {
-      const owner = await ownerService.updateOwnersEmail(uuid, email)
+      const owner = await ownerService.updateOwnersEmail(ownerUuid, email)
       if (owner && owner[0] === 1) {return res.send({ message: "Owner's email updated successfully" }) }
       return res.status(400).send({ message: "Owner's email not updated" });
     } else {
@@ -113,8 +120,3 @@ export const updateOwner = catchAsync(async (req, res) => {
   }
 });
 
-/*
-|--------------------------------------------------------------------------
-| Exports.
-|--------------------------------------------------------------------------
-*/

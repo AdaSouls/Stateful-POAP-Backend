@@ -3,6 +3,7 @@ import poapRouter from "./poap.route";
 import { config } from "../../config";
 import ownerRouter from "./owner.route";
 import eventRouter from "./event.route";
+import issuerRouter from "./issuer.route";
 
 const router = express.Router();
 
@@ -19,6 +20,10 @@ const defaultRoutes = [
     path: "/event",
     route: eventRouter,
   },
+  {
+    path: "/issuer",
+    route: issuerRouter,
+  },
 ];
 
 const devRoutes: any[] = [
@@ -34,6 +39,10 @@ const devRoutes: any[] = [
   {
     path: "/event",
     route: eventRouter,
+  },
+  {
+    path: "/issuer",
+    route: issuerRouter,
   },
 ];
 

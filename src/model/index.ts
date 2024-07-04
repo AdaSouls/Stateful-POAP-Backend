@@ -1,14 +1,24 @@
 import Poap from "./Poap";
 import Owner from "./Owner";
 import Event from "./Event";
+import Issuer from "./Issuer";
+import EventPoap from "./EventPoap";
 
-Owner.hasMany(Poap, { foreignKey: 'ownerId' })
-Poap.belongsTo(Owner, { foreignKey: 'ownerId' })
+Owner.hasMany(Poap, { foreignKey: "ownerUuid" });
+Poap.belongsTo(Owner, { foreignKey: "ownerUuid" });
 
-Owner.hasMany(Event, { foreignKey: 'ownerId' })
-Event.belongsTo(Owner, { foreignKey: 'ownerId' })
+Issuer.hasMany(Event, { foreignKey: "issuerUuid" });
+Event.belongsTo(Issuer, { foreignKey: "issuerUuid" });
 
-Event.hasMany(Poap, { foreignKey: 'eventId' })
-Poap.belongsTo(Event, { foreignKey: 'eventId' })
+Event.belongsToMany(Poap, {
+  through: EventPoap,
+  foreignKey: "eventUuid",
+  otherKey: "poapUuid",
+});
+Poap.belongsToMany(Event, {
+  through: EventPoap,
+  foreignKey: "poapUuid",
+  otherKey: "eventUuid",
+});
 
-export {Poap, Owner, Event}
+export { Poap, Owner, Event, Issuer, EventPoap };

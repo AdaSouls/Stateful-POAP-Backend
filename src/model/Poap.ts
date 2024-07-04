@@ -1,38 +1,24 @@
-import {
-  Model,
-  DataTypes,
-} from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database/connection";
 
 export default class Poap extends Model {}
 
 Poap.init(
   {
-    uuid: {
-      type: DataTypes.STRING,
+    poapUuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
       primaryKey: true,
     },
-    poap: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     instance: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
     },
   },
   {
     tableName: "poaps",
-    sequelize
-    // schema: config.postgresql.schema,
-    // indexes: [
-    //   {
-    //     unique: true,
-    //     fields: ["address"],
-    //   },
-    // ],
+    sequelize,
   }
 );
