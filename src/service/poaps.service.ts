@@ -1,10 +1,11 @@
 import { Event, Poap, EventPoap, Owner } from "../model";
 import dotenv from "dotenv";
 import path from "path";
+import * as ownerService from "./owners.service";
 import * as eventService from "./events.service";
 import * as eventPoapService from "./eventPoaps.service";
 import { mintToken } from "../util/smartContracts/poapContractInteractions";
-import { encodeStatus } from "../util/smartContracts/statusEncoder";
+import { encodeStatus, eventUuidInBytes32 } from "../util/smartContracts/statusEncoder";
 import { UUID } from "crypto";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
@@ -56,25 +57,33 @@ export const getPoapByPK = async (address: string) => {
   }
 };
 
-export const mintPoap = async (ownerUuid: UUID, eventUuid: UUID) => {
+export const mintPoap = async (ownerAddress: string, eventUuid: UUID) => {
   const poapUuid = crypto.randomUUID();
   const event = await eventService.getEventByPK(eventUuid);
-  let mintInfo;
-  if (event) {
-    mintInfo = {
-      ownerUuid,
-      eventUuid,
-      poapUuid,
-      instance: event?.dataValues.mintedPoaps + 1,
-    };
+  if (event?.dataValues.approved === "rejected") {
+    return "Event is already rejected";
   }
-  const hashedInfo = encodeStatus([event?.dataValues]);
+  let mintInfo;
+  // const hashedInfo = encodeStatus([event?.dataValues]);
   try {
-    const mintedTokenToBlockchain = await mintToken(
+    const owner = await ownerService.findOrCreateOwner(ownerAddress)
+    if (!owner) {
+      return "Owner didn't exist and could not be found or created";
+    }
+    if (event && owner[0]) {
+      mintInfo = {
+        ownerUuid: owner[0].dataValues.ownerUuid,
+        eventUuid,
+        poapUuid,
+        instance: event?.dataValues.mintedPoaps + 1,
+      };
+    }
+    // const mintedTokenToBlockchain = await mintToken(
+      mintToken(
       event?.dataValues.Issuer.dataValues.issuerIdInContract as number,
       event?.dataValues.idInContract as number,
-      HH_ACCOUNT_1 as string,
-      hashedInfo
+      HH_ACCOUNT_0 as string,
+      // eventUuidInBytes32(eventUuid)
     );
 
     if (
@@ -105,6 +114,13 @@ export const mintPoap = async (ownerUuid: UUID, eventUuid: UUID) => {
 export const addEventToPoap = async (poapUuid: UUID, eventUuid: UUID) => {
   // Add hashed data to paima
   try {
+    const isEventInPoap = await EventPoap.findOne({
+      where: { poapUuid },
+      include: { model: Event, where: { eventUuid } },
+    });
+    if (isEventInPoap) {
+      return;
+    }
     const poap = await Poap.findByPk(poapUuid);
     const event = await Event.findByPk(eventUuid);
     if (!poap || !event) {

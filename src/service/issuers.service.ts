@@ -10,6 +10,15 @@ export const getAllIssuers = async (offset: number, limit: number) => {
   }
 };
 
+export const getAllIssuersByAddress = async (offset: number, limit: number, address: string) => {
+  try {
+    const issuers = await Issuer.findAll({ offset, limit, where: { address } });
+    return issuers;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
 export const getIssuerByAddress = async (address: string) => {
   try {
     const issuer = await Issuer.findOne({ where: { address } });
@@ -34,6 +43,7 @@ export const getIssuerByPK = async (
 ) => {
   try {
     const issuer = await Issuer.findByPk(issuerUuid, { attributes: options });
+    console.log("🚀 ~ issuer:", issuer)
     return issuer;
   } catch (error) {
     console.log("Error: ", error);
@@ -60,11 +70,13 @@ export const createNewIssuer = async (
 export const updateIssuersEmail = async (issuerUuid: string, email: string) => {
   try {
     const issuer = await Issuer.update({ email }, { where: { issuerUuid } });
+    console.log("🚀 ~ updateIssuersEmail ~ issuer:", issuer)
     return issuer;
   } catch (error) {
     console.log("Error: ", error);
   }
 };
+
 export const updateIssuersAddress = async (
   issuerUuid: string,
   address: string

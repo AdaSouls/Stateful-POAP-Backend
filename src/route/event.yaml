@@ -91,3 +91,10 @@ components:
         mintedPoaps:
           type: integer
           example: 50
+        approved:
+          type: string
+          enum:
+            - "Pending"
+            - "Approved"
+            - "Rejected"
+          default: "Pending"

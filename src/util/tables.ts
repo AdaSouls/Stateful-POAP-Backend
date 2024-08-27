@@ -25,6 +25,7 @@ export const eventTable = {
   expiryDate: "expiryDate",
   endDate: "endDate",
   startDate: "startDate",
+  approved: "approved",
 };
 
 export const ownerTable = {

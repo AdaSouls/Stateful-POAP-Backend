@@ -96,7 +96,7 @@ export const createNewOwner = catchAsync(async (req, res) => {
   }
   try {
     const owner = await ownerService.createNewOwner(address, email);
-    res.send(owner);
+    res.status(201).send(owner);
     return owner;
   } catch (error) {
     console.log("Error: ", error);

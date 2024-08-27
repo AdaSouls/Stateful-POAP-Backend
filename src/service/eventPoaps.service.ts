@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import path from "path";
 import * as eventService from "./events.service";
 import { mintToken } from "../util/smartContracts/poapContractInteractions";
-import { encodeStatus } from "../util/smartContracts/statusEncoder";
 import { sequelize } from "../database/connection";
 import { QueryTypes } from "sequelize";
 import { UUID } from "crypto";

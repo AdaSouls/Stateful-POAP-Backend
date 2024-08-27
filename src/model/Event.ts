@@ -7,7 +7,6 @@ Event.init(
   {
     eventUuid: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
       primaryKey: true,
@@ -15,6 +14,7 @@ Event.init(
     idInContract: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      autoIncrement: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -89,8 +89,12 @@ Event.init(
       allowNull: true,
     },
     eventType: {
+      // type: DataTypes.ENUM,
+      // values: ["Virtual", "In-Person", "Both", "Unknown"],
+      // defaultValue: "Unknown",
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      defaultValue: "Unknown",
     },
     amountOfAttendees: {
       type: DataTypes.INTEGER,
@@ -101,6 +105,8 @@ Event.init(
       allowNull: true,
     },
     poapType: {
+      // type: DataTypes.ENUM,
+      // values: ["Poap", "Soulbound", "Consensual"],
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -110,6 +116,13 @@ Event.init(
     },
     mintedPoaps: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    approved: {
+      // type: DataTypes.ENUM,
+      // values: ["Pending", "Approved", "Rejected"],
+      type: DataTypes.STRING,
+      defaultValue: "Pending",
       allowNull: false,
     },
   },
