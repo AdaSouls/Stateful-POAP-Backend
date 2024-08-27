@@ -49,6 +49,19 @@ export const createNewOwner = async (address: string, email: string) => {
   }
 };
 
+export const findOrCreateOwner = async (address: string) => {
+  try {
+    const ownerUuid = crypto.randomUUID();
+    const owner = await Owner.findOrCreate({
+      where: { address },
+      defaults: { ownerUuid },
+    });
+    return owner;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
 export const updateOwnersEmail = async (ownerUuid: string, email: string) => {
   try {
     const owner = await Owner.update({ email }, { where: { ownerUuid } });
@@ -57,7 +70,10 @@ export const updateOwnersEmail = async (ownerUuid: string, email: string) => {
     console.log("Error: ", error);
   }
 };
-export const updateOwnersAddress = async (ownerUuid: string, address: string) => {
+export const updateOwnersAddress = async (
+  ownerUuid: string,
+  address: string
+) => {
   try {
     const owner = await Owner.update({ address }, { where: { ownerUuid } });
     return owner;

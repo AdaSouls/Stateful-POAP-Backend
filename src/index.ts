@@ -1,11 +1,10 @@
-import { formalDbMigrations, basicDbSync } from './database/migrator';
-import app from './app';
-import { config } from './config/config';
-import { logger } from './config/logger';
-import { sequelize } from './database/connection';
+import { formalDbMigrations, basicDbSync } from "./database/migrator";
+import app from "./app";
+import { config } from "./config/config";
+import { logger } from "./config/logger";
+import { sequelize } from "./database/connection";
 
 let server: any;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +15,7 @@ let server: any;
 const exitHandler = () => {
   if (server) {
     server.close(() => {
-      logger.info('Server closed');
+      logger.info("Server closed");
       process.exit(1);
     });
   } else {
@@ -29,17 +28,15 @@ const unexpectedErrorHandler = (error: any) => {
   exitHandler();
 };
 
+process.on("uncaughtException", unexpectedErrorHandler);
+process.on("unhandledRejection", unexpectedErrorHandler);
 
-process.on('uncaughtException', unexpectedErrorHandler);
-process.on('unhandledRejection', unexpectedErrorHandler);
-
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received');
+process.on("SIGTERM", () => {
+  logger.info("SIGTERM received");
   if (server) {
     server.close();
   }
 });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -48,26 +45,19 @@ process.on('SIGTERM', () => {
 |--------------------------------------------------------------------------
 */
 
-formalDbMigrations().then(() => {
-  basicDbSync().then(() => {
-    logger.info('Fully Connected to PostgreSQL');
-    server = app.listen(config.port, () => {
-      logger.info(`Listening to port ${config.port}`);
-    });
-  }).catch((error: any) => {
+formalDbMigrations()
+  .then(() => {
+    basicDbSync()
+      .then(() => {
+        logger.info("Fully Connected to PostgreSQL");
+        server = app.listen(config.port, () => {
+          logger.info(`Listening to port ${config.port}`);
+        });
+      })
+      .catch((error: any) => {
+        exitHandler();
+      });
+  })
+  .catch((error: any) => {
     exitHandler();
   });
-}).catch((error: any) => {
-  exitHandler();
-});
-
-// (async () => {
-//   try {
-//     await sequelize.sync({ force: false });
-//     app.listen(config.port, () => {
-//       console.log(`Listening on Port: ${config.port}`);
-//     });
-//   } catch (error: any) {
-//     console.error("Unable to connect:", error.message);
-//   }
-// })();

@@ -1,4 +1,4 @@
-import Joi from "joi"
+import Joi from "joi";
 import { validateEventType, validatePoapType } from "./custom.validation";
 
 export const event = Joi.object().keys({
@@ -24,6 +24,4 @@ export const event = Joi.object().keys({
   amountOfAttendees: Joi.number(),
   account: Joi.string().required(),
   poapType: Joi.custom(validatePoapType),
-})
-
-
+});

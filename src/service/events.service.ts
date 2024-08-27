@@ -6,9 +6,10 @@ import * as soulbound from "../util/smartContracts/soulboundContractInteractions
 import * as consensual from "../util/smartContracts/consensualContractInteractions";
 import dotenv from "dotenv";
 import path from "path";
-import { PoapType } from "../common/enums";
+import { Approved, PoapType } from "../common/enums";
 import { IEvent, IIssuer } from "../common/interfaces";
 import { UUID } from "crypto";
+import { eventUuidInBytes32 } from "../util/smartContracts/statusEncoder";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
@@ -20,6 +21,7 @@ const {
   SOULBOUND_ADDRESS,
   CONSENSUAL_ADDRESS,
   HH_ACCOUNT_0,
+  HH_ACCOUNT_1,
 } = process.env;
 
 export const getAllEvents = async (offset: number, limit: number) => {
@@ -58,11 +60,42 @@ export const getEventByPK = async (eventUuid: string) => {
   }
 };
 
+export const getAllByApprovalStatus = async (approved: string) => {
+  try {
+    const events = await Event.findAll({
+      include: { model: Issuer },
+      where: { approved },
+    });
+    return events;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
+export const getApprovalStatus = async (
+  eventIdInContract: number,
+  issuerAddress: string,
+  contractType: string
+) => {
+  try {
+    const event = await Event.findOne({
+      where: { idInContract: eventIdInContract, poapType: contractType },
+      include: { model: Issuer, where: { address: issuerAddress } },
+    });
+    return event;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
 export const getEventMintableAmount = async (
   eventUuid: string
 ): Promise<{ poapsToBeMinted: number; mintedPoaps: number } | undefined> => {
   try {
-    console.log("🚀 ~ [eventTable.poapsToBeMinted, eventTable.mintedPoaps]:", [eventTable.poapsToBeMinted, eventTable.mintedPoaps])
+    console.log("🚀 ~ [eventTable.poapsToBeMinted, eventTable.mintedPoaps]:", [
+      eventTable.poapsToBeMinted,
+      eventTable.mintedPoaps,
+    ]);
     const mintableAmount = await Event.findOne({
       where: { eventUuid },
       attributes: [eventTable.poapsToBeMinted, eventTable.mintedPoaps],
@@ -110,65 +143,69 @@ export const getEventContractType = async (eventUuid: string) => {
   }
 };
 
-export const createEvent = async (event: IEvent, issuerUuid: UUID, issuerIdInContract: number, hashedInfo: string) => {
-  console.log("🚀 ~ createEvent ~ issuerIdInContract:", issuerIdInContract)
-  console.log("🚀 ~ createEvent ~ issuerUuid:", issuerUuid);
-  console.log("🚀 ~ createEvent ~ event:", event);
+export const createEvent = async (event: IEvent, issuerUuid: UUID) => {
   const eventUuid = crypto.randomUUID();
-  if (!issuerUuid) {
-    console.log("Error: Issuer not found");
-    return;
-  }
   const eventInfo = { ...event, issuerUuid, eventUuid };
-  let milliseconds;
-  if (eventInfo.expiryDate) {
-    const date = new Date(eventInfo.expiryDate);
-    milliseconds = date.getTime();
-  } else {
-    milliseconds = Date.now() / 1000 + 86400 * 365 * 99;
-  }
-  const timestamp = Math.floor(milliseconds / 1000);
   try {
-    if (eventInfo.poapType === PoapType.Poap) {
-      console.log("🚀 ~ createEvent ~ eventInfo.poapType === PoapType.Poap:", eventInfo.poapType === PoapType.Poap)
-      const eventCreated = await poap.createEventId(
-        issuerIdInContract,
-        eventInfo.idInContract,
-        eventInfo.poapsToBeMinted,
-        timestamp,
-        HH_ACCOUNT_0 as string,
-        hashedInfo
-        
-      );
-      console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
-    }
-    // if (eventInfo.poapType === PoapType.Soulbound) {
-    //   const eventCreated = await soulbound.createEventId(
-    //     eventInfo.idInContract,
-    //     eventInfo.poapsToBeMinted,
-    //     timestamp,
-    //     HH_ACCOUNT_0 as string
-    //   );
-    //   console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
-    // }
-    // if (eventInfo.poapType === PoapType.Consensual) {
-    //   const eventCreated = await consensual.createEventId(
-    //     eventInfo.idInContract,
-    //     eventInfo.poapsToBeMinted,
-    //     timestamp,
-    //     HH_ACCOUNT_0 as string
-    //   );
-    //   console.log("🚀 ~ createEvent ~ eventCreated:", eventCreated);
-    // } else {
-    //   console.log("Error: Event type not found");
-    //   return;
-    // }
-
-    const event = await Event.create(eventInfo, {include: {model: Issuer}});
-    // const event = await Event.create(eventInfo, { include: { model: Issuer } });
-
+    const event = await Event.create(eventInfo, { include: { model: Issuer } });
     return event;
   } catch (error) {
     console.log("Error: ", error);
   }
-}
+};
+
+export const approveOrReject = async (eventUuid: string, approval: string) => {
+  try {
+    if (approval === Approved.Rejected) {
+      const event = await Event.update(
+        { approved: approval },
+        { where: { eventUuid } }
+      );
+      if (event[0] === 1) {
+        const event = await Event.findByPk(eventUuid);
+        return event;
+      } else {
+        return;
+      }
+    } else {
+      const event = await Event.findByPk(eventUuid, {
+        include: { model: Issuer },
+      });
+      if (event?.dataValues.poapType === PoapType.Poap) {
+        let milliseconds;
+        if (event?.dataValues.expiryDate !== null) {
+          const date = new Date(event?.dataValues.expiryDate);
+          milliseconds = date.getTime();
+        } else {
+          const currentDate = new Date();
+          const futureDate = new Date();
+          futureDate.setFullYear(currentDate.getFullYear() + 99);
+          milliseconds = futureDate.getTime();
+        }
+        const timestamp = Math.floor(milliseconds / 1000);
+        const eventCreatedInBC = await poap.createEventId(
+          event?.dataValues.Issuer?.dataValues.issuerIdInContract,
+          event?.dataValues.idInContract,
+          event?.dataValues.poapsToBeMinted,
+          timestamp,
+          HH_ACCOUNT_0 as string
+        );
+      }
+      const eventUpdated = await Event.update(
+        { approved: approval },
+        { where: { eventUuid } }
+      );
+      if (eventUpdated[0] === 1) {
+        const event = await Event.findByPk(eventUuid);
+        return event;
+      }
+      if (eventUpdated[0] === 0) {
+        return null;
+      } else {
+        return;
+      }
+    }
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};

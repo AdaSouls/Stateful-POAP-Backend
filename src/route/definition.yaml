@@ -1,0 +1,17 @@
+openapi: 3.0.3
+info:
+  title: ADA Soulbound Token API
+  version: 1.0.0
+  description: Route definitions for ADA's Soulbound Token API
+tags:
+  - name: Owner
+    description: Owner operations
+  - name: Issuer
+    description: Issuer operations
+  - name: Event
+    description: Event operations
+  - name: Poap
+    description: Poap operations
+externalDocs:
+  description: Find out more about ADA's Soulbound Tokens
+  url: https://www.adasouls.io/

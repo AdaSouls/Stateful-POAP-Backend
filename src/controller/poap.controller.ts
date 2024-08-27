@@ -1,5 +1,6 @@
 import catchAsync from "../util/catchAsync";
 import * as poapService from "../service/poaps.service";
+import * as ownerService from "../service/owners.service";
 import pagination from "../util/pagination";
 import { Owner } from "../model";
 import { UUID } from "crypto";
@@ -29,7 +30,10 @@ export const getAllPoaps = catchAsync(async (req, res) => {
       paginationOffset,
       paginationLimit
     );
-    res.send(poaps);
+    if (!poaps) {
+      res.status(404).send({ message: "Poaps not found" });
+    }
+    res.status(200).send(poaps);
   } catch (error) {
     console.log("Error: ", error);
     res.status(400).send({ message: "Poaps could not be found" });
@@ -46,7 +50,10 @@ export const getAllPoapsByOwnersAddress = catchAsync(async (req, res) => {
   }
   try {
     const poaps = await poapService.getAllPoapsByOwnersAddress(address);
-    res.send(poaps);
+    if (!poaps) {
+      res.status(404).send({ message: "Poaps not found" });
+    }
+    res.status(200).send(poaps);
   } catch (error) {
     console.log("Error: ", error);
   }
@@ -62,7 +69,10 @@ export const getPoapByPK = catchAsync(async (req, res) => {
   }
   try {
     const poaps = await poapService.getPoapByPK(poapUuid);
-    res.send(poaps);
+    if (!poaps) {
+      res.status(404).send({ message: "Poap not found" });
+    }
+    res.status(200).send(poaps);
   } catch (error) {
     console.log("Error: ", error);
   }
@@ -87,36 +97,32 @@ export const getAllPoapsByEvent = catchAsync(async (req, res) => {
 /**
  * Get Poap's state.
  */
-export const getPoapsState = catchAsync(async (req, res) => {});
+// export const getPoapsState = catchAsync(async (req, res) => {});
 
 /**
  * Mint a Poap.
  */
 export const mintPoap = catchAsync(async (req, res) => {
-  const { ownerUuid, eventUuid } = req.body;
-  // const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-  // if (!uuidRegex.test(ownerUuid) || uuidRegex.test(eventUuid)) {
-  //   res.status(400).send({message: "Invalid UUID"})
-  // }
-  if (!ownerUuid) {
-    res.status(400).send({message: "Owner's information is needed"})
+  const { ownerAddress, eventUuid } = req.body;
+  if (!ownerAddress) {
+    res.status(400).send({ message: "Owner's information is needed" });
   }
   try {
-    const owner = await Owner.findByPk(ownerUuid);
+    const owner = await ownerService.getOwnerByAddress(ownerAddress);
     if (!owner) {
-      res.status(400).send({message: "Owner not found"})
+      res.status(400).send({ message: "Owner not found" });
     }
-    const poap = await poapService.mintPoap(ownerUuid, eventUuid);
+    const poap = await poapService.mintPoap(ownerAddress, eventUuid);
     if (!poap) {
-      res.status(400).send({message: "Poap couldn't be minted"})
+      res.status(400).send({ message: "Poap couldn't be minted" });
     }
     if (typeof poap === "string") {
-      res.status(400).send({message: poap})
+      res.status(400).send({ message: poap });
     }
     res.status(201).send(poap);
   } catch (error) {
     console.log("Error: ", error);
-    res.status(400).send({message: "Poap couldn't be minted"})
+    res.status(400).send({ message: "Poap couldn't be minted" });
   }
 });
 
@@ -124,12 +130,14 @@ export const mintPoap = catchAsync(async (req, res) => {
  * Update Poap's event relation.
  */
 export const addEventToPoap = catchAsync(async (req, res) => {
-  const { poapUuid, eventUuid } = req.body
+  const { poapUuid, eventUuid } = req.body;
   try {
     const updatedPoap = await poapService.addEventToPoap(poapUuid, eventUuid);
-    console.log("🚀 ~ addEventToPoap ~ updatedPoap:", updatedPoap)
-    res.send(updatedPoap);
+    if (!updatedPoap) {
+      res.status(400).send({ message: "Poap couldn't be updated" });
+    }
+    res.status(200).send(updatedPoap);
   } catch (error) {
     console.log("Error: ", error);
   }
-})
+});

@@ -1,5 +1,13 @@
 import { IEvent } from "../../common/interfaces";
 import { ethers } from "ethers";
+import crypto, { UUID } from "crypto";
+// import dotenv from "dotenv";
+// import path from "path";
+// import zlib from "zlib";
+
+// dotenv.config({ path: path.join(__dirname, "../.env") });
+
+// const { BYTES16_IV, BYTES32_KEY } = process.env;
 
 const abiEncoder = new ethers.AbiCoder();
 
@@ -7,15 +15,7 @@ const getTimestamp = (date: Date) => {
   const newDate = new Date(date);
   const timestamp = newDate.getTime() / 1000;
   return timestamp;
-};
-
-const hashString = (input: string): string => {
-  // Hash the string using SHA-256
-
-  const hashedString = ethers.keccak256(input);
-
-  return hashedString;
-};
+}
 
 export const encodeStatus = (poapStatus: IEvent[]) => {
   const data = poapStatus.map((status) => {
@@ -34,7 +34,9 @@ export const encodeStatus = (poapStatus: IEvent[]) => {
     ],
     [data]
   );
-  const encodedInBytes32 = hashString(encodedStatus);
+  console.log("🚀 ~ encodeStatus ~ encodedStatus:", encodedStatus);
+  const encodedInBytes32 = ethers.encodeBytes32String(encodedStatus);
+  console.log("🚀 ~ encodeStatus ~ encodedInBytes32:", encodedInBytes32);
   return encodedInBytes32;
 };
 
@@ -82,3 +84,13 @@ export const decodeStatus = (status: string) => {
   }));
   return decodedArray;
 };
+
+export const eventUuidInBytes32 = (eventUuid: UUID) => {
+  const encodedUuid = ethers.encodeBytes32String(eventUuid);
+  return encodedUuid;
+}
+
+export const eventUuidFromBytes32 = (eventUuid: string) => {
+  const decodedUuid = ethers.decodeBytes32String(eventUuid);
+  return decodedUuid;
+}

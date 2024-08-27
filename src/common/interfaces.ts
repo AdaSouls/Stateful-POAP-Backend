@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { EventType, PoapType } from "./enums";
+import { Approved, EventType, PoapType } from "./enums";
 
 export interface IEvent {
   title: string;
@@ -26,8 +26,9 @@ export interface IEvent {
   poapType: PoapType;
   poapsToBeMinted: number;
   mintedPoaps: number;
-  idInContract: number;
+  idInContract?: number;
   eventUuid?: UUID;
+  approved: Approved;
 }
 
 export interface IOwner {

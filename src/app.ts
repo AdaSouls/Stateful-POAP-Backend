@@ -1,17 +1,17 @@
-import express, {Application} from "express";
+import express, { Application } from "express";
 import { Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import cors from "cors";
 import compression from "compression";
-// import xss from "xss-clean";
 import httpStatus from "http-status";
 import { config } from "./config/config";
 import * as morgan from "./config/morgan";
-import router from "./route/v1";
+import router from "./route";
 import { checkDown } from "./middleware/down";
 import { errorConverter, errorHandler } from "./middleware/error";
-import { ApiError } from "./util/ApiError";
+// import { ApiError } from "./util/ApiError";
+import { openApiValidator } from "./middleware/openApiValidator";
 
 const app = express();
 
@@ -52,7 +52,27 @@ app.use(compression());
 // } else {
 //   app.use(cors({ credentials: true, origin: config.frontendUrl }));
 // }
-app.options("*", cors());
+// app.options("*", cors(
+//   {
+//     credentials: true,
+//     origin: [
+//       "http://localhost:3000",
+//     ],
+//   }
+// ));
+
+app.use(
+  cors({
+    credentials: true,
+    origin: [
+      "http://localhost:3000",
+      //         config.frontendUrl,
+      //         config.frontendUrl2 || "",
+      //         config.frontendUrl3 || "",
+      //         config.frontendUrl4 || "",
+    ],
+  })
+);
 
 // see "Troubleshooting Proxy" section here https://www.npmjs.com/package/express-rate-limit
 app.set("trust proxy", 2);
@@ -67,12 +87,14 @@ app.use(checkDown);
 app.use(cookieParser());
 
 // v1 api routes
-app.use("/v1", router); // Pass the express application instance to the router module
+app.use("/", router); // Pass the express application instance to the router module
+
+app.use(openApiValidator);
 
 // send back a 404 error for any unknown api request
-app.use((req: Request, res: Response, next: NextFunction) => {
-  next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
-});
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
+// });
 
 // convert error to ApiError, if needed
 app.use(errorConverter);
